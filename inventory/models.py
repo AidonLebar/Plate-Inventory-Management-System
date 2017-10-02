@@ -14,11 +14,11 @@ class Order(models.Model):
     start_time = models.DateTimeField('Start Time')
     end_time = models.DateTimeField('End Time')
     order_created = models.DateTimeField('Created', auto_now_add = True)
-    order_last_modified = model.DateTimeField('Last Modified', auto_now = False)
+    order_last_modified = models.DateTimeField('Last Modified', auto_now = False)
 
 class OrderItem(models.Model):
-    order = model.ForeignKey(Order, on_delete=models.CASCADE)
-    item = model.ForeignKey(InventoryItem, on_delete=models.CASCADE)
+    order = models.ForeignKey(Order, on_delete=models.CASCADE)
+    item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
     quantity_borrowed = models.IntegerField()
     quantity_returned = models.IntegerField()
 
