@@ -51,3 +51,6 @@ class OrderItem(models.Model):
 
     def activeOrderItem(self):
         return self.order.activeOrder();
+
+    def itemDelta(self):
+        return self.quantity_borrowed - self.quantity_returned
