@@ -8,7 +8,7 @@ An system for McGill's Plate Club to manage their inventory.
 git clone https://gitlab.science.mcgill.ca/ctf-general/plate-club-inventory.git
 ```
 
-2.Install virtualenv (if you haven't already):
+2. Install virtualenv (if you haven't already):
 ```bash
 pip install virtualenv
 ```
