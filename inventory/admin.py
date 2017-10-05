@@ -15,7 +15,7 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
-    (None,          {'fields' : ['borrower_name','order_created', 'order_last_modified', 'active']}),
+    (None,          {'fields' : ['borrower_name','order_created', 'order_last_modified']}),
     ('Information', {'fields' : ['start_time', 'end_time']},),
     ]
     readonly_fields = ('order_created', 'order_last_modified', 'active')
