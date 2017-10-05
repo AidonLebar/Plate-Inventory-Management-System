@@ -1,5 +1,6 @@
 import datetime
 from django.utils import timezone
+from django.core.exceptions import ValidationError
 
 from django.db import models
 
@@ -40,6 +41,16 @@ class Order(models.Model):
         now = timezone.now()
         return (now >= self.start_time) and (now <= self.end_time)
 
+    def clean(self):
+        if self.start_time is None:
+            raise ValidationError("Start time cannot be empty")
+
+        if self.end_time is None:
+            raise ValidationError("End time cannot be empty")
+
+        if self.end_time < self.start_time:
+            raise ValidationError("Start time must be before end time")
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
@@ -54,3 +65,7 @@ class OrderItem(models.Model):
 
     def itemDelta(self):
         return self.quantity_borrowed - self.quantity_returned
+
+    def clean(self):
+        if self.quantity_returned > self.quantity_borrowed:
+            raise ValidationError("Cannot return more than was borrowed")
