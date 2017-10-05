@@ -10,14 +10,20 @@ class InventoryItem(models.Model):
     def __str__(self):
         return self.item_name
 
-    def currentStock(self): #calculates current stock as total - currently lent out
+    def currentStock(self): #calculates current stock as total - currently out
         stock = self.total_stock
-        order_item_set = self.orderitem_set.all()
-        for  i in order_item_set :
+        for  i in self.orderitem_set.all():
             if i.activeOrderItem():
                 stock = stock - i.quantity_borrowed
-
         return stock
+
+    def averageOrder(self):
+        average = 0
+        for i in self.orderitem_set.all():
+            average = average + i.quantity_borrowed
+        average = average/self.orderitem_set.count()
+
+        return average
 
 class Order(models.Model):
     borrower_name = models.CharField(max_length = 100)
