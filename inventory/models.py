@@ -67,5 +67,8 @@ class OrderItem(models.Model):
         return self.quantity_borrowed - self.quantity_returned
 
     def clean(self):
+        if self.quantity_borrowed == 0 or self.quantity_borrowed is None:
+            raise ValidationError("Order item must have a quantity")
+
         if self.quantity_returned > self.quantity_borrowed:
             raise ValidationError("Cannot return more than was borrowed")
