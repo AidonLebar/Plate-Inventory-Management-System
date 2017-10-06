@@ -10,7 +10,7 @@ class InventoryItemModelTest(TestCase):
 
     def test_name_string(self):
         """
-        __str__() should return the name of the item
+        The name of the item should be returned by __str__().
         """
         name = "test"
         stock = 50
@@ -21,7 +21,7 @@ class OrderModelTest(TestCase):
 
     def test_string(self):
         """
-        ___str__() should return the name of the borrower an the start date
+        The name of the borrower and the start date of the order should be returned by __str__().
         """
         name = "testOrder"
         start = timezone.now()
@@ -32,7 +32,7 @@ class OrderModelTest(TestCase):
 
     def test_active_order_with_active_order(self):
         """
-        activeOrder() returns true for an order when current time is between start and end time of order
+        Order should be active when current time is between start and end time of order.
         """
         name = "testOrder"
         time = timezone.now()
@@ -43,7 +43,7 @@ class OrderModelTest(TestCase):
 
     def test_active_order_with_pre_active_order(self):
         """
-        activeOrder() returns false for an order when current time is before start time of order
+        Order should be inactive when current time is before start time of order.
         """
         name = "tetsOrder"
         time = timezone.now()
@@ -54,7 +54,7 @@ class OrderModelTest(TestCase):
 
     def test_active_order_with_post_active_order(self):
         """
-        activeOrder() returns false for an order when current time is after end time of order
+        Order should be inactive when current time is after end time of order.
         """
         name = "testOrder"
         time = timezone.now()
@@ -65,7 +65,7 @@ class OrderModelTest(TestCase):
 
     def test_end_time_before_start_time(self):
         """
-        ValidationError should be raised if end time is before start time
+        A ValidationError should be raised if the order's end time is before start time.
         """
         name = "testOrder"
         start = timezone.now()
@@ -75,7 +75,7 @@ class OrderModelTest(TestCase):
 
     def test_no_start_time(self):
         """
-        ValidationError should be raised if there is no start time
+        A ValidationError should be raised if there is no start time on the order.
         """
 
         name = "testOrder"
@@ -85,7 +85,7 @@ class OrderModelTest(TestCase):
 
     def test_no_end_time(self):
         """
-        ValidationError should be raised if there is no end time
+        A ValidationError should be raised if there is no end time to the order.
         """
         name = "test"
         start = timezone.now() - datetime.timedelta(days = 1)
@@ -96,7 +96,7 @@ class OrderItemModelTest(TestCase):
 
     def test_string(self):
         """
-        ___str__() should return quantity and name of order item
+        Order item's quantity and name should be returned by __str__() in format.
         """
         name = "testItem"
         testStock = 500
@@ -114,7 +114,7 @@ class OrderItemModelTest(TestCase):
 
     def test_item_delta(self):
         """
-        itemDelta() should return the difference between amount borrowed and ammount returned
+        Item delta or loss should be the difference between amount borrowed and amount returned.
         """
         name = "testItem"
         testStock = 500
@@ -133,7 +133,7 @@ class OrderItemModelTest(TestCase):
 
     def test_quantity_borrowed_equals_None(self):
         """
-        clean() should raise ValidationError if no quantity_borrowed is given
+        A ValidationError should be raised if no quantity_borrowed is given
         """
         name = "testItem"
         testStock = 500
@@ -150,7 +150,7 @@ class OrderItemModelTest(TestCase):
 
     def test_quantity_borrowed_equals_zero(self):
         """
-        clean() should raise ValidationError if quantity_borrowed is 0
+        A ValidationError should be raised if quantity_borrowed is 0.
         """
         name = "testItem"
         testStock = 500
@@ -167,7 +167,7 @@ class OrderItemModelTest(TestCase):
 
     def test_quantity_returned_greater_than_quantity_borrowed(self):
         """
-        clean() should raise ValidationError if quantity_returned > quantity_borrowed
+        A ValidationError should be raised if quantity_returned is greater than quantity_borrowed.
         """
         name = "testItem"
         testStock = 500
@@ -186,7 +186,7 @@ class OrderItemModelTest(TestCase):
 
     def test_active_order_with_active_order(self):
         """
-        activeOrderItem() should return true if it's order is active
+        Order item should be active if it's order is active.
         """
         name = "testItem"
         testStock = 500
@@ -204,7 +204,7 @@ class OrderItemModelTest(TestCase):
 
     def test_active_order_with_pre_active_order(self):
         """
-        activeOrderItem() should return true if now is before it's order's start time
+        Order item should should be inactive if current time is before it's order's start time.
         """
         name = "testItem"
         testStock = 500
@@ -222,7 +222,7 @@ class OrderItemModelTest(TestCase):
 
     def test_active_order_with_post_active_order(self):
         """
-        activeOrderItem() should return true if now is after it's order's end time
+        Order item should be inactive if current time is after it's order's end time.
         """
         name = "testItem"
         testStock = 500
