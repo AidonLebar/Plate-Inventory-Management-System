@@ -6,7 +6,7 @@ from django.core.exceptions import ValidationError
 
 from .models import InventoryItem, Order, OrderItem
 
-class InventoryItemTest(TestCase):
+class InventoryItemModelTest(TestCase):
 
     def test_name_string(self):
         """
@@ -92,7 +92,7 @@ class OrderModelTest(TestCase):
         o = Order(borrower_name = name, start_time = start)
         self.assertRaises(ValidationError)
 
-class OrderItemTest(TestCase):
+class OrderItemModelTest(TestCase):
 
     def test_string(self):
         """
