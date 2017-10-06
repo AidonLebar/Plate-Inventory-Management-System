@@ -9,19 +9,32 @@ class InventoryItem(models.Model):
     total_stock = models.PositiveIntegerField()
 
     def __str__(self):
-        """Does nothing, returns inventory item name as string."""
+        """
+        Does nothing, returns inventory item name as string.
+        """
         return self.item_name
 
     def currentStock(self):
-        """Calculates current stock as total stock minus what is currently out in active orders, returns an integer."""
+        """
+        Calculates current stock as total stock minus what is currently out in active orders, returns an integer.
+        """
         stock = self.total_stock
         for  i in self.orderitem_set.all():
             if i.activeOrderItem():
                 stock = stock - i.quantity_borrowed
         return stock
 
+    def clean(self):
+          """
+          Ensures total stock is not 0. Returns nothing, but raises exceptions
+          """
+          if self.total_stock == 0:
+              raise ValidationError("Total stock must be a non-zero quantity")
+
     def averageOrder(self):
-        """Calculates mean of orders of specific item type, returns a float."""
+        """
+        Calculates mean of orders of specific item type, returns a float.
+        """
         average = 0
         for i in self.orderitem_set.all():
             average = average + i.quantity_borrowed
@@ -37,12 +50,16 @@ class Order(models.Model):
     order_last_modified = models.DateTimeField('Last Modified', auto_now = True)
 
     def __str__(self):
-        """Does nothing, returns borrowers name and start date as a string."""
+        """
+        Does nothing, returns borrowers name and start date as a string.
+        """
         start_date = self.start_time.strftime('%Y-%m-%d')
         return '{} : {}'.format(self.borrower_name, start_date)
 
     def activeOrder(self):
-        """Determines if order is active if current time is between order start time and end time, returns a boolean."""
+        """
+        Determines if order is active if current time is between order start time and end time, returns a boolean.
+        """
         now = timezone.now()
         return (now >= self.start_time) and (now <= self.end_time)
 
@@ -67,7 +84,9 @@ class OrderItem(models.Model):
     quantity_returned = models.PositiveIntegerField(default=0)
 
     def __str__(self):
-        """Does nothing, returns quantity borrowed and item name as a string."""
+        """
+        Does nothing, returns quantity borrowed and item name as a string.
+        """
         return '{} {}'.format(self.quantity_borrowed, self.item.item_name)
 
     def activeOrderItem(self):
@@ -78,12 +97,14 @@ class OrderItem(models.Model):
         return self.order.activeOrder();
 
     def itemDelta(self):
-        """Determines loss as difference between quantity borrwed and quantity returned, returns an integer."""
+        """
+        Determines loss as difference between quantity borrwed and quantity returned, returns an integer.
+        """
         return self.quantity_borrowed - self.quantity_returned
 
     def clean(self):
         """
-        Ensures quantity borrowed is not zero or None, and ensure quantity returne is not greater than quantity borrowed.
+        Ensures quantity borrowed is not 0 or None, and ensure quantity returne is not greater than quantity borrowed.
         Returns nothing, but will raise exceptions.
         """
         if self.quantity_borrowed == 0 or self.quantity_borrowed is None:

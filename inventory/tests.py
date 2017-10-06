@@ -12,10 +12,21 @@ class InventoryItemModelTest(TestCase):
         """
         The name of the item should be returned by __str__().
         """
-        name = "test"
+        name = "testItem"
         stock = 50
         i = InventoryItem(item_name = name, total_stock = stock)
+
         self.assertEquals(str(i), name)
+
+    def test_zero_total_stock(self):
+        """
+        A ValidationError should be raised if an item with 0 total stock is created.
+        """
+        name = "testItem"
+        i = InventoryItem(item_name = name, total_stock = 0)
+
+        self.assertRaises(ValidationError)
+
 
 class OrderModelTest(TestCase):
 
@@ -28,6 +39,7 @@ class OrderModelTest(TestCase):
         start_trunc = start.strftime('%Y-%m-%d')
         end = timezone.now() + datetime.timedelta(days = 1)
         o = Order(borrower_name = name, start_time = start, end_time = end)
+
         self.assertEquals(str(o), name + ' : ' + start_trunc)
 
     def test_active_order_with_active_order(self):
@@ -39,6 +51,7 @@ class OrderModelTest(TestCase):
         start = timezone.now() - datetime.timedelta(days = 1)
         end = timezone.now() + datetime.timedelta(days = 1)
         activeOrder = Order(borrower_name = name, start_time = start, end_time = end)
+
         self.assertIs(activeOrder.activeOrder(), True)
 
     def test_active_order_with_pre_active_order(self):
@@ -50,6 +63,7 @@ class OrderModelTest(TestCase):
         start = timezone.now() + datetime.timedelta(days = 1)
         end = timezone.now() + datetime.timedelta(days = 2)
         activeOrder = Order(borrower_name = name, start_time = start, end_time = end)
+
         self.assertIs(activeOrder.activeOrder(), False)
 
     def test_active_order_with_post_active_order(self):
@@ -61,6 +75,7 @@ class OrderModelTest(TestCase):
         start = timezone.now() - datetime.timedelta(days = 2)
         end = timezone.now() - datetime.timedelta(days = 1)
         activeOrder = Order(borrower_name = name, start_time = start, end_time = end)
+
         self.assertIs(activeOrder.activeOrder(), False)
 
     def test_end_time_before_start_time(self):
@@ -71,6 +86,7 @@ class OrderModelTest(TestCase):
         start = timezone.now()
         end = timezone.now() - datetime.timedelta(days = 1)
         o = Order(borrower_name = name, start_time = start, end_time = end)
+
         self.assertRaises(ValidationError)
 
     def test_no_start_time(self):
@@ -81,6 +97,7 @@ class OrderModelTest(TestCase):
         name = "testOrder"
         end = timezone.now() - datetime.timedelta(days = 1)
         o = Order(borrower_name = name, end_time = end)
+
         self.assertRaises(ValidationError)
 
     def test_no_end_time(self):
@@ -90,6 +107,7 @@ class OrderModelTest(TestCase):
         name = "test"
         start = timezone.now() - datetime.timedelta(days = 1)
         o = Order(borrower_name = name, start_time = start)
+
         self.assertRaises(ValidationError)
 
 class OrderItemModelTest(TestCase):
