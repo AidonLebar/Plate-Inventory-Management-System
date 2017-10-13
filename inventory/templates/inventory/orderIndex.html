@@ -1,0 +1,9 @@
+{% if order_list %}
+    <ul>
+        {% for order in order_list %}
+            <li><a href="/order/{{ order.id }}/">{{ order.borrower_name }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No orders exist in the database</p>
+{% endif %}

@@ -1,0 +1,9 @@
+{% if inventory_item_list %}
+    <ul>
+        {% for item in inventory_item_list %}
+            <li><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+    <p>No items exist in database</p>
+{% endif %}
