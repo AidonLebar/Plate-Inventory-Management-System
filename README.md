@@ -18,12 +18,22 @@ pip install virtualenv
 virtualenv -p python3 env
 ```
 
-4. Install the dependencies:
+4. Start virtual environment:
+ ```bash
+source env/bin/activate
+```
+
+5. Switch branch to dev:
+```bash
+git checkout dev
+```
+
+6. Install the dependencies:
 ```bash
 pip install -r requirements.txt
 ```
 
-5. Start the development server
+7. Start the development server
 ```bash
 python manage.py runserver
 ```
