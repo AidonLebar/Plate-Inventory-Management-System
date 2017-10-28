@@ -14,17 +14,10 @@
   </head>
   <body>
       <header>
-      <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+      <nav class="navbar navbar-expand-md navbar-dark fixed-top" style="background-color: #191970">
          <a class="navbar-brand" href="/">
          <img src="{% static '/inventory/PIMS_no_circle.png' }%}" width="100" alt="PIMS">
          </a>
-    <!--
-        <a class="navbar-brand" href="/">PIMS</a>
-        <button class="navbar-toggler d-lg-none" type="button" data-toggle="collapse" data-target="#navbarsExampleDefault" aria-controls="navbarsExampleDefault" aria-expanded="false" aria-label="Toggle navigation">
-          <span class="navbar-toggler-icon"></span>
-        </button>
-    -->
-
 
         <div class="collapse navbar-collapse" id="header-nav-bar">
           <ul class="navbar-nav mr-auto">
@@ -47,48 +40,17 @@
       <div class="row">
         <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
           <ul class="nav nav-pills flex-column">
-              <!--
-            <li class="nav-item">
-              <a class="nav-link active" href="#">Overview <span class="sr-only">(current)</span></a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Reports</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Analytics</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Export</a>
-            </li>
-          </ul>
+              <form>
+                  <strong>Quick Add</strong><br>
+                  Name:<br>
 
-          <ul class="nav nav-pills flex-column">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nav item</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nav item again</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">One more nav</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Another nav item</a>
-            </li>
-          </ul>
-
-          <ul class="nav nav-pills flex-column">
-            <li class="nav-item">
-              <a class="nav-link" href="#">Nav item again</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">One more nav</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="#">Another nav item</a>
-            </li>
-          </ul>
-      -->
+                  <input type="text" name="name"><br>
+                  <input type="checkbox" name="item" value="plate">Plate<br>
+                  <input type="checkbox" name="item" value="bowl">Bowl<br>
+                  <input type="checkbox" name="item" value="fork">Fork<br>
+                  <input type="checkbox" name="item" value="spoon">Spoon<br>
+                  <input type="submit">
+              </form>
         </nav>
 
         <main role="main" class="col-sm-9 ml-sm-auto col-md-10 pt-3">
