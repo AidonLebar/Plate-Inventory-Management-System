@@ -1,3 +1,6 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+
 {% if order_list %}
     <ul>
         {% for order in order_list %}
@@ -7,3 +10,5 @@
 {% else %}
     <p>No orders exist in the database</p>
 {% endif %}
+
+{% endblock %}
