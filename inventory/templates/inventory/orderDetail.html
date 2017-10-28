@@ -1,6 +1,35 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
-{{ order }}
+
+{% if order_list %}
+
+	<u1>
+		{% for order in order_list %}
+		{% endfor %}
+	</u1>
+	<table style="width:100%">
+	  	<tr>
+	    	<th>Borrower</th>
+	    	<th>Start Time</th>
+	    	<th>End Time</th>
+	    	<th>Order Created</th>
+	    	<th>Order Last Modified</th>
+	  	</tr>
+	  	{% for order in order_list %}
+	  	<tr>
+	    	<td>{{ order.borrower_name }}</td>
+	    	<td>{{ order.start_time }}</td>
+	    	<td>{{ order.end_time }}</td>
+	    	<td>{{ order.order_created }}</td>
+	    	<td>{{ order.order_last_modified }}</td>
+	  	</tr>
+		{% endfor %}
+
+	</table> 
+
+{% else %}
+	<p>No orders in database</p>
+{% endif %}
 
 {% endblock %}
