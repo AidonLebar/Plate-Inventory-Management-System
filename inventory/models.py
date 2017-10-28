@@ -77,8 +77,6 @@ class Order(models.Model):
         if self.end_time < self.start_time:
             raise ValidationError("Start time must be before end time")
 
-        #TODO: check available at start time of order, stop orders greater than available amount
-
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
