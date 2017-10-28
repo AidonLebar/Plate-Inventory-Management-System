@@ -77,6 +77,8 @@ class Order(models.Model):
         if self.end_time < self.start_time:
             raise ValidationError("Start time must be before end time")
 
+        #TODO: check available at start time of order, stop orders greater than available amount
+
 class OrderItem(models.Model):
     order = models.ForeignKey(Order, on_delete=models.CASCADE)
     item = models.ForeignKey(InventoryItem, on_delete=models.CASCADE)
@@ -112,3 +114,14 @@ class OrderItem(models.Model):
 
         if self.quantity_returned > self.quantity_borrowed:
             raise ValidationError("Cannot return more than was borrowed")
+
+        inventory_during_order = self.item.total_stock
+        for e in Order.objects.all():
+            if not(((e.start_time > self.order.end_time))or((e.end_time < self.order.start_time))):
+                for i in e.orderitem_set.all():
+                    if i.item.item_name == self.item.item_name:
+                        inventory_during_order -= i.quantity_borrowed
+
+
+        if self.quantity_borrowed > inventory_during_order:
+            raise ValidationError("Cannot borrow more than available, there are %i %s available at this time" % (inventory_during_order, self.item.item_name))
