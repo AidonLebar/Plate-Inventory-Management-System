@@ -122,4 +122,4 @@ class OrderItem(models.Model):
 
 
         if self.quantity_borrowed > inventory_during_order:
-            raise ValidationError("Cannot borrow more than available, there are %i %s available at this time" % (inventory_during_order, self.item.item_name))
+            raise ValidationError("Cannot borrow more than available, there are %i %s available during that time" % (inventory_during_order, self.item.item_name))
