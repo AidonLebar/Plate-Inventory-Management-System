@@ -1,8 +1,11 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
+<h1>Orders</h1>
+
 {% if order_list %}
     <table class="table table-bordered">
+        <h5>Orders</h5>
       <thead>
         <tr>
           <th>Borrower</th>
@@ -12,11 +15,40 @@
       </thead>
       <tbody>
                 {% for order in order_list %}
+                {% if order.quick_order == False %}
                 <tr>
                     <td><a href="/order/{{ order.id }}/">{{ order.borrower_name }}</td>
                     <td>{{ order.start_time }}</td>
                     <td>{{ order.end_time }}</td>
                 </tr>
+                {% endif %}
+                {% endfor %}
+      </tbody>
+    </table>
+    <br>
+
+    <table class="table table-bordered">
+        <h5>Quick Orders</h5>
+      <thead>
+        <tr>
+          <th>Borrower</th>
+          <th>Items</th>
+        </tr>
+      </thead>
+      <tbody>
+                {% for order in order_list %}
+                {% if order.quick_order == True %}
+                <tr>
+                    <td><a href="/order/{{ order.id }}/">{{ order.borrower_name }}</td>
+                    <td>
+                        <ul class="order-item-list">
+                        {% for item in order.orderitem_set.all %}
+                            <li>{{ item }}</li>
+                        {% endfor %}
+                        <ul>
+                    </td>
+                </tr>
+                {% endif %}
                 {% endfor %}
       </tbody>
     </table>

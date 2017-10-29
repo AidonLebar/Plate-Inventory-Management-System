@@ -42,6 +42,5 @@ def quickOrder(request):
             o = Order(borrower_name = form.cleaned_data['name'], start_time = timezone.now(), end_time = (timezone.now() + datetime.timedelta(hours = 1)), quick_order = True)
             o.save()
             for i in choices:
-                x = OrderItem(item = InventoryItem.objects.filter(item_name = i).first(), order = o, quantity_borrowed = 1)
-                x.save()
+                o.orderitem_set.create(item = InventoryItem.objects.filter(item_name = i).first(), quantity_borrowed = 1)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
