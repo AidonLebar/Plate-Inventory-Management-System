@@ -4,7 +4,6 @@
 <table class="table table-bordered">
   <thead>
     <tr>
-      <!--<th>#</th>-->
       <th>Item</th>
       <th>Total Stock</th>
       <th>Current Stock</th>
@@ -14,7 +13,6 @@
       {% if inventory_item_list %}
             {% for item in inventory_item_list %}
             <tr>
-                 <!-- <th scope="row">{{ forloop.counter }}</th> -->
                 <td><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</td>
                 <td>{{ item.total_stock }}</td>
                 <td>{{ item.currentStock }}</td>
@@ -23,31 +21,6 @@
       {% else %}
           <p>No items exist in database</p>
       {% endif %}
-    <!--
-    <tr>
-      <th scope="row">1</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@mdo</td>
-    </tr>
-    <tr>
-      <th scope="row">2</th>
-      <td>Mark</td>
-      <td>Otto</td>
-      <td>@TwBootstrap</td>
-    </tr>
-    <tr>
-      <th scope="row">3</th>
-      <td>Jacob</td>
-      <td>Thornton</td>
-      <td>@fat</td>
-    </tr>
-    <tr>
-      <th scope="row">4</th>
-      <td colspan="2">Larry the Bird</td>
-      <td>@twitter</td>
-    </tr>
-    -->
   </tbody>
 </table>
 
