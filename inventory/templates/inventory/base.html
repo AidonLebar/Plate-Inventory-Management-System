@@ -48,6 +48,7 @@
           <ul class="nav nav-pills flex-column">
               <form action="/quickOrder/" method="post" >
                   {% csrf_token %}
+                  <strong>Quick Order</strong><br>
                   Name: <br>
                   {{ form }} <br>
                    <input type="submit" value="Submit" />
