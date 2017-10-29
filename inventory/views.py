@@ -44,6 +44,4 @@ def quickOrder(request):
             for i in choices:
                 x = OrderItem(item = InventoryItem.objects.filter(item_name = i).first(), order = o, quantity_borrowed = 1)
                 x.save()
-                #o.orderitem_set.add(x)
-
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
