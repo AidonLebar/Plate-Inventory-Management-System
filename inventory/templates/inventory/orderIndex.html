@@ -2,28 +2,24 @@
 {% block content %}
 
 {% if order_list %}
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Total Stock</th>
-      <th>Current Stock</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% if inventory_item_list %}
-            {% for item in inventory_item_list %}
-            <tr>
-                <td><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</td>
-                <td>{{ item.total_stock }}</td>
-                <td>{{ item.currentStock }}</td>
-            </tr>
-            {% endfor %}
-      {% else %}
-          <p>No items exist in database</p>
-      {% endif %}
-  </tbody>
-</table>
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Borrower</th>
+          <th>Start Time</th>
+          <th>End Time</th>
+        </tr>
+      </thead>
+      <tbody>
+                {% for order in order_list %}
+                <tr>
+                    <td><a href="/Orders/{{ order.id }}/">{{ order.borrower_name }}</td>
+                    <td>{{ order.start_time }}</td>
+                    <td>{{ order.end_time }}</td>
+                </tr>
+                {% endfor %}
+      </tbody>
+    </table>
 
 {% else %}
     <p>No orders exist in the database</p>

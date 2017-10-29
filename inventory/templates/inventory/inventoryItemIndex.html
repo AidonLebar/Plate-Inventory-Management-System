@@ -1,27 +1,29 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Item</th>
-      <th>Total Stock</th>
-      <th>Current Stock</th>
-    </tr>
-  </thead>
-  <tbody>
-      {% if inventory_item_list %}
-            {% for item in inventory_item_list %}
-            <tr>
-                <td><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</td>
-                <td>{{ item.total_stock }}</td>
-                <td>{{ item.currentStock }}</td>
-            </tr>
-            {% endfor %}
-      {% else %}
-          <p>No items exist in database</p>
-      {% endif %}
-  </tbody>
-</table>
+
+{% if inventory_item_list %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Total Stock</th>
+          <th>Current Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+                {% for item in inventory_item_list %}
+                <tr>
+                    <td><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</td>
+                    <td>{{ item.total_stock }}</td>
+                    <td>{{ item.currentStock }}</td>
+                </tr>
+                {% endfor %}
+      </tbody>
+    </table>
+
+{% else %}
+  <p>No items exist in database</p>
+{% endif %}
 
 {% endblock %}
