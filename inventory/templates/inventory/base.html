@@ -40,16 +40,11 @@
       <div class="row">
         <nav class="col-sm-3 col-md-2 d-none d-sm-block bg-light sidebar">
           <ul class="nav nav-pills flex-column">
-              <form>
-                  <strong>Quick Add</strong><br>
-                  Name:<br>
-
-                  <input type="text" name="name"><br>
-                  <input type="checkbox" name="item" value="plate">Plate<br>
-                  <input type="checkbox" name="item" value="bowl">Bowl<br>
-                  <input type="checkbox" name="item" value="fork">Fork<br>
-                  <input type="checkbox" name="item" value="spoon">Spoon<br>
-                  <input type="submit">
+              <form action="/quickOrder/" method="post" >
+                  {% csrf_token %}
+                  Name: <br>
+                  {{ form }} <br>
+                   <input type="submit" value="Submit" />
               </form>
         </nav>
 
