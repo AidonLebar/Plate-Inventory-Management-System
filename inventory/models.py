@@ -14,7 +14,6 @@ class InventoryItem(models.Model):
         """
         return self.item_name
 
-    @property
     def currentStock(self):
         """
         Calculates current stock as total stock minus what is currently out in active orders, returns an integer.
