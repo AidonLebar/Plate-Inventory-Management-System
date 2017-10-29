@@ -61,3 +61,5 @@ def itemAdded(request):
             i = InventoryItem(item_name = name, total_stock = stock)
             i.save()
             return HttpResponseRedirect('/inventory/')
+        else:
+            return HttpResponseRedirect('/addItem/')

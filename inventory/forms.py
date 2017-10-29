@@ -1,4 +1,5 @@
 from django import forms
+from django.core.validators import MinValueValidator
 
 class quickOrderForm(forms.Form):
     QUICK_ORDER_CHOICES =(
@@ -13,4 +14,4 @@ class quickOrderForm(forms.Form):
 
 class addItemForm(forms.Form):
     item_name = forms.CharField(label='Item Name', max_length=100)
-    stock = forms.IntegerField()
+    stock = forms.IntegerField(validators=[MinValueValidator(1)])
