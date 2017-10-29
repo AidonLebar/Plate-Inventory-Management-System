@@ -6,7 +6,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm
+from .forms import quickOrderForm, addItemForm
 
 def index(request):
     form = quickOrderForm()
@@ -44,3 +44,20 @@ def quickOrder(request):
             for i in choices:
                 o.orderitem_set.create(item = InventoryItem.objects.filter(item_name = i).first(), quantity_borrowed = 1)
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+    else:
+        return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def addItem(request):
+    form = quickOrderForm()
+    additemform = addItemForm()
+    return render(request, 'inventory/addItem.html', {'form':form, 'additemform': additemform})
+
+def itemAdded(request):
+    if request.method == 'POST':
+        form = addItemForm(request.POST)
+        if form.is_valid():
+            name = form.cleaned_data['item_name']
+            stock = form.cleaned_data['stock']
+            i = InventoryItem(item_name = name, total_stock = stock)
+            i.save()
+            return HttpResponseRedirect('/inventory/')

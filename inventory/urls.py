@@ -9,5 +9,7 @@ urlpatterns = [
     url(r'^orders/$', views.orderIndex, name='orderIndex'),
     url(r'^inventoryItem/(?P<inventory_item_id>[0-9]+)/$', views.inventoryDetail, name='inventoryDetail'),
     url(r'^order/(?P<order_id>[0-9]+)/$', views.orderDetail, name='orderDetail'),
-    url(r'^quickOrder/$', views.quickOrder, name='quickOrder')
+    url(r'^quickOrder/$', views.quickOrder, name='quickOrder'),
+    url(r'^addItem/$', views.addItem, name='addItem'),
+    url(r'^itemAdded/$', views.itemAdded, name='itemAdded'),
 ]
