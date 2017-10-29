@@ -39,7 +39,7 @@ def quickOrder(request):
         form = quickOrderForm(request.POST)
         if form.is_valid():
             choices = form.cleaned_data['items']
-            o = Order(borrower_name = form.cleaned_data['name'], start_time = timezone.now(), end_time = (timezone.now() + datetime.timedelta(hours = 1)))
+            o = Order(borrower_name = form.cleaned_data['name'], start_time = timezone.now(), end_time = (timezone.now() + datetime.timedelta(hours = 1)), quick_order = True)
             o.save()
             for i in choices:
                 x = OrderItem(item = InventoryItem.objects.filter(item_name = i).first(), order = o, quantity_borrowed = 1)

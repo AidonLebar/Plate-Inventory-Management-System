@@ -15,10 +15,10 @@ class OrderItemInline(admin.TabularInline):
 
 class OrderAdmin(admin.ModelAdmin):
     fieldsets = [
-    (None,          {'fields' : ['borrower_name','order_created', 'order_last_modified']}),
-    ('Information', {'fields' : ['start_time', 'end_time']},),
+    (None,          {'fields' : ['borrower_name','order_created', 'order_last_modified', 'quick_order']}),
+    ('Information', {'fields' : ['start_time', 'end_time',]},),
     ]
-    readonly_fields = ('order_created', 'order_last_modified', 'active')
+    readonly_fields = ('order_created', 'order_last_modified', 'active', 'quick_order')
     inlines = [OrderItemInline]
     list_display = ['borrower_name', 'start_time', 'end_time', 'active']
     ordering = ['-order_created']

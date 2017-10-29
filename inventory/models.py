@@ -48,6 +48,7 @@ class Order(models.Model):
     end_time = models.DateTimeField('End Time')
     order_created = models.DateTimeField('Created', auto_now_add = True)
     order_last_modified = models.DateTimeField('Last Modified', auto_now = True)
+    quick_order = models.BooleanField(default = False)
 
     def __str__(self):
         """
