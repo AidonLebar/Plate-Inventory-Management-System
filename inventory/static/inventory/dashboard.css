@@ -81,3 +81,9 @@ h1 {
 .order-item-list li:last-of-type:after{
     content: "";
 }
+
+.messages {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}

@@ -4,6 +4,7 @@ from django.shortcuts import render, get_object_or_404
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
+from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
 from .forms import quickOrderForm, addItemForm
@@ -58,8 +59,10 @@ def itemAdded(request):
         if form.is_valid():
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
+            messages.success(request, 'Item added successfully.')
             i = InventoryItem(item_name = name, total_stock = stock)
             i.save()
-            return HttpResponseRedirect('/inventory/')
+            return HttpResponseRedirect('/addItem/')
         else:
+            messages.error(request, 'Item was not added. Stock must be greater than 0.')
             return HttpResponseRedirect('/addItem/')
