@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'^quickOrder/$', views.quickOrder, name='quickOrder'),
     url(r'^addItem/$', views.addItem, name='addItem'),
     url(r'^itemAdded/$', views.itemAdded, name='itemAdded'),
+    url(r'^placeOrder/$', views.placeOrder, name='placeOrder'),
 ]

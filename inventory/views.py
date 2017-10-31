@@ -66,3 +66,7 @@ def itemAdded(request):
         else:
             messages.error(request, 'Item was not added. Stock must be greater than 0.')
             return HttpResponseRedirect('/addItem/')
+
+def placeOrder(request):
+    form = quickOrderForm()
+    return render(request, 'inventory/placeOrder.html', {'form':form})
