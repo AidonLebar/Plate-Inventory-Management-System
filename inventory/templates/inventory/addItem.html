@@ -1,4 +1,7 @@
 {% extends 'inventory/base.html' %}
+
+{% block page_title %}Add Item{% endblock %}
+
 {% block content %}
 
 {% if messages %}
@@ -14,7 +17,6 @@
 </ul>
 {% endif %}
 
-<h1>Add Item</h1>
 <form action="/itemAdded/" method="post" >
     {% csrf_token %}
     {{ additemform }} <br>

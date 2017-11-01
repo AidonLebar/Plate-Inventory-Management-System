@@ -1,7 +1,7 @@
 {% extends 'inventory/base.html' %}
 {% block content %}
 
-<h1>{{ inventoryItem }}</h1>
+{% block page_title %}{{ inventoryItem }}{% endblock %}
 Total Stock: {{ inventoryItem.total_stock }} <br>
 Current Stock: {{ inventoryItem.currentStock }}<br>
 Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br>
