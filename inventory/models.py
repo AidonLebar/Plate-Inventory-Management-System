@@ -38,7 +38,11 @@ class InventoryItem(models.Model):
         average = 0
         for i in self.orderitem_set.all():
             average = average + i.quantity_borrowed
-        average = average/self.orderitem_set.count()
+
+        if self.orderitem_set.count() > 0:
+            average = average/self.orderitem_set.count()
+        else:
+            average = 0
 
         return average
 
