@@ -59,7 +59,7 @@ def itemAdded(request):
         if form.is_valid():
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
-            messages.success(request, 'Item added successfully.')
+            messages.success(request, '%s added successfully.' % name)
             i = InventoryItem(item_name = name, total_stock = stock)
             i.save()
             return HttpResponseRedirect('/addItem/')
