@@ -1,10 +1,18 @@
 {% extends 'inventory/base.html' %}
-{% block content %}
 
 {% block page_title %}{{ inventoryItem }}{% endblock %}
+
+{% block content %}
+
 Total Stock: {{ inventoryItem.total_stock }} <br>
 Current Stock: {{ inventoryItem.currentStock }}<br>
 Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br>
+
+<form action = "/deleteItem/" method="post" name="deleteItemForm">
+	{% csrf_token %}
+	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
+	<button type="submit" class="btn btn-danger">Delete</button>
+</form>
 
 <br>
 <table class="table table-bordered">

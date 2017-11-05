@@ -36,11 +36,14 @@ class InventoryItem(models.Model):
         Calculates mean of orders of specific item type, returns a float.
         """
         average = 0
+        total_non_quick_orders = 0;
         for i in self.orderitem_set.all():
-            average = average + i.quantity_borrowed
+            if i.order.quick_order == False:
+                average = average + i.quantity_borrowed
+                total_non_quick_orders += 1
 
-        if self.orderitem_set.count() > 0:
-            average = average/self.orderitem_set.count()
+        if total_non_quick_orders > 0:
+            average = average/total_non_quick_orders
         else:
             average = 0
 

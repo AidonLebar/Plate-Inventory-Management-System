@@ -10,7 +10,7 @@ class quickOrderForm(forms.Form):
                     )
 
     name = forms.CharField(label=False, max_length=100)
-    items = forms.MultipleChoiceField(label=False, widget=forms.CheckboxSelectMultiple, choices=QUICK_ORDER_CHOICES)
+    items = forms.MultipleChoiceField(label=False, widget=forms.CheckboxSelectMultiple(attrs={'class':'quick_order_form_checkboxes'}), choices=QUICK_ORDER_CHOICES)
 
 class addItemForm(forms.Form):
     item_name = forms.CharField(label='Item Name', max_length=100)

@@ -70,3 +70,12 @@ def itemAdded(request):
 def placeOrder(request):
     form = quickOrderForm()
     return render(request, 'inventory/placeOrder.html', {'form':form})
+
+def deleteItem(request):
+    if request.method == 'POST':
+        inventory_item_id = request.POST['item_id']
+        inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
+        inventoryItem.delete()
+        messages.success(request, 'Item was successfully deleted.')
+
+    return HttpResponseRedirect('/inventory/')
