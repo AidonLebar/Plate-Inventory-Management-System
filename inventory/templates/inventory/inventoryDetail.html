@@ -11,6 +11,7 @@ Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br
 <form action = "/deleteItem/" method="post" name="deleteItemForm">
 	{% csrf_token %}
 	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
+	<input type="hidden", name="item_name", value={{ inventoryItem }}>
 	<button type="submit" class="btn btn-danger">Delete</button>
 </form>
 

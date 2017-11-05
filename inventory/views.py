@@ -74,8 +74,12 @@ def placeOrder(request):
 def deleteItem(request):
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
-        inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
-        inventoryItem.delete()
-        messages.success(request, 'Item was successfully deleted.')
+        item_name = request.POST['item_name']
+        if item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon':
+            messages.warning(request, "%s should not be deleted for internal reasons." % item_name)
+        else:
+            inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
+            inventoryItem.delete()
+            messages.success(request, '%s was successfully deleted.' % item_name)
 
     return HttpResponseRedirect('/inventory/')
