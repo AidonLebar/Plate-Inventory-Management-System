@@ -137,3 +137,13 @@ def returnItem(request):
         else:
             messages.error(request, 'Returned amount must be positive')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def returnAll(request):
+    if request.method == 'POST':
+        order_id=request.POST['order_id']
+        order = get_object_or_404(Order, pk=order_id)
+        for item in order.orderitem_set.all():
+            item.quantity_returned = item.quantity_borrowed
+            item.save()
+        messages.success(request, 'All items returned.')
+        return HttpResponseRedirect('/order/%d/' % order.id)

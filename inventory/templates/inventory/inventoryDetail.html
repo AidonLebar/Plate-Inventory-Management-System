@@ -28,7 +28,7 @@ Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br
 	{% csrf_token %}
 	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
 	<input type="hidden", name="item_name", value={{ inventoryItem }}>
-	<button type="submit" class="btn btn-danger">Delete</button>
+	<button type="submit" class="btn btn-outline-danger">Delete</button>
 </form>
 
 <br>
@@ -51,7 +51,7 @@ Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br
 					</tr>
 				{% else %}
 					<tr style="color:gray;">
-						<td>{{ orderitem.order }}</td>
+						<td><a href="/order/{{ orderitem.order.id }}/" style="color: gray;">{{ orderitem.order }}</td>
 						<td>{{ orderitem.quantity_borrowed }}</td>
 						<td>{{ orderitem.quantity_returned }}</td>
 					</tr>
