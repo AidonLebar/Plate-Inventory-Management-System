@@ -32,7 +32,8 @@ End Time: {{ order.end_time }} <br>
   <thead>
 	<tr>
 	  <th>Item</th>
-	  <th>Quantity</th>
+	  <th>Quantity Borrowed</th>
+      <th> Quantity Returned</th>
 	</tr>
   </thead>
   <tbody>
@@ -40,6 +41,7 @@ End Time: {{ order.end_time }} <br>
 			<tr>
 				<td><a href="/inventoryItem/{{ orderitem.item.id }}/">{{ orderitem.item.item_name }}</td>
 				<td>{{ orderitem.quantity_borrowed }}</td>
+                <td>{{ orderitem.quantity_returned }}</td>
 			</tr>
 			{% endfor %}
   </tbody>
