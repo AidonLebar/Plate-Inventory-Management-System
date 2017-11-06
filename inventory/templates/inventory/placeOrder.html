@@ -22,7 +22,9 @@
 
 <form action = "/placeOrder/" method="post">
 	{% csrf_token %}
-    {{ placeorderform }}
+    <ul class="placeOrderForm">
+        {{ placeorderform.as_ul }}
+    </ul>
   <button type="submit" class="btn btn-primary">Submit</button>
 </form>
 

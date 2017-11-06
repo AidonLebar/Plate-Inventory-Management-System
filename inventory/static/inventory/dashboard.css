@@ -91,3 +91,15 @@ h1 {
 .sidebar-form-submit {
     text-align: center;
 }
+
+.placeOrderForm {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.addItemForm {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
