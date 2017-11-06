@@ -20,7 +20,7 @@
 </ul>
 {% endif %}
 
-<form action = "/placeOrder/" method="post">
+<form action = "/orderPlaced/" method="post">
 	{% csrf_token %}
     <table class="placeOrderForm">
         {{ placeorderform.as_table }}

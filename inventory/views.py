@@ -63,9 +63,9 @@ def itemAdded(request):
         if form.is_valid():
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
-            messages.success(request, '%s added successfully.' % name)
             i = InventoryItem(item_name = name, total_stock = stock)
             i.save()
+            messages.success(request, '%s added successfully.' % name)
             return HttpResponseRedirect('/addItem/')
         else:
             messages.error(request, 'Item was not added. Stock must be greater than 0.')
@@ -97,3 +97,21 @@ def deleteOrder(request):
         messages.success(request, 'Order was successfully deleted.')
 
     return HttpResponseRedirect('/orders/')
+
+def orderPlaced(request):
+    if request.method == 'POST':
+        form = orderForm(request.POST)
+        if form.is_valid():
+            borrower = form.cleaned_data['borrower_name']
+            start = form.cleaned_data['start_time']
+            end = form.cleaned_data['end_time']
+            if end > start:
+                o = Order(borrower_name = borrower, start_time = start, end_time = end)
+                o.save()
+                messages.success(request, 'Order successfully created.')
+                return HttpResponseRedirect('/order/%d' % o.id)
+            else:
+                messages.error(request, 'Start date must be before end date.')
+                return HttpResponseRedirect('/placeOrder/')
+        else:
+            return HttpResponseRedirect('/orders/')
