@@ -41,7 +41,16 @@ End Time: {{ order.end_time }} <br>
 			<tr>
 				<td><a href="/inventoryItem/{{ orderitem.item.id }}/">{{ orderitem.item.item_name }}</td>
 				<td>{{ orderitem.quantity_borrowed }}</td>
-                <td>{{ orderitem.quantity_returned }}</td>
+                <td>
+                    {{ orderitem.quantity_returned }}
+                    <form action="/returnItem/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden", name="order_item_id", value={{ orderitem.id }}>
+                        <input type="hidden", name="order_id", value={{ order.id }}>
+                        {{ returnItemForm.returned }}
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Submit</button>
+                    </form>
+                </td>
 			</tr>
 			{% endfor %}
   </tbody>

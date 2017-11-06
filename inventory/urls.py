@@ -16,4 +16,6 @@ urlpatterns = [
     url(r'^deleteItem/$', views.deleteItem, name='deleteItem'),
     url(r'^deleteOrder/$', views.deleteOrder, name='deleteOrder'),
     url(r'^orderPlaced/$', views.orderPlaced, name='orderPlaced'),
+    url(r'^returnItem/$', views.returnItem, name='returnItem'),
+
 ]

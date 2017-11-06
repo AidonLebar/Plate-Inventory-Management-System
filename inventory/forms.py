@@ -21,3 +21,6 @@ class orderForm(forms.Form):
     borrower_name = forms.CharField(label='Borrower Name', max_length=100)
     start_time = forms.DateTimeField(label='Start Date and Time', initial=datetime.date.today)
     end_time = forms.DateTimeField(label='End Date and Time', initial=datetime.date.today)
+
+class returnItemForm(forms.Form):
+    returned = forms.IntegerField(validators=[MinValueValidator(1)],label=False)

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm, orderForm
+from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm
 
 def index(request):
     form = quickOrderForm()
@@ -33,7 +33,7 @@ def inventoryDetail(request, inventory_item_id):
 def orderDetail(request, order_id):
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
-    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form})
+    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm})
 
 def quickOrder(request):
     if request.method == 'POST':
@@ -115,3 +115,25 @@ def orderPlaced(request):
                 return HttpResponseRedirect('/placeOrder/')
         else:
             return HttpResponseRedirect('/orders/')
+
+def returnItem(request):
+    if request.method == 'POST':
+        form = returnItemForm(request.POST)
+        if form.is_valid():
+            orderItem_id = request.POST['order_item_id']
+            orderItem = get_object_or_404(OrderItem, pk=orderItem_id)
+            returned = form.cleaned_data['returned']
+            order_id = request.POST['order_id']
+            order = get_object_or_404(Order, pk=order_id)
+            if returned > orderItem.quantity_borrowed:
+                messages.error(request, 'Cannot return more than was borrowed')
+                return HttpResponseRedirect('/order/%d/' % order.id)
+            else:
+                orderItem.quantity_returned = returned
+                orderItem.save()
+                messages.success(request, 'Return successful.')
+                return HttpResponseRedirect('/order/%d/' % order.id)
+
+        else:
+            messages.error(request, 'Returned amount must be positive')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
