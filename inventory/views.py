@@ -46,6 +46,9 @@ def quickOrder(request):
                 o.orderitem_set.create(item = InventoryItem.objects.filter(item_name = i).first(), quantity_borrowed = 1)
             messages.success(request, 'Quick order successful.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+        else:
+            messages.error(request, 'Quick order unsuccessful, please select at least one item.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
