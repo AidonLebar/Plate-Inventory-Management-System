@@ -27,11 +27,19 @@ Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br
   </thead>
   <tbody>
 			{% for orderitem in inventoryItem.orderitem_set.all %}
-			<tr>
-				<td>{{ orderitem.order }}</td>
-				<td>{{ orderitem.quantity_borrowed }}</td>
-                <td>{{ orderitem.quantity_returned }}</td>
-			</tr>
+				{% if orderitem.order.quick_order == False %}
+					<tr>
+						<td><a href="/order/{{ orderitem.order.id }}/">{{ orderitem.order }}</td>
+						<td>{{ orderitem.quantity_borrowed }}</td>
+		                <td>{{ orderitem.quantity_returned }}</td>
+					</tr>
+				{% else %}
+					<tr style="color:gray;">
+						<td>{{ orderitem.order }}</td>
+						<td>{{ orderitem.quantity_borrowed }}</td>
+						<td>{{ orderitem.quantity_returned }}</td>
+					</tr>
+				{% endif %}
 			{% endfor %}
   </tbody>
 </table>
