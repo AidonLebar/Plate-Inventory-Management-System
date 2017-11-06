@@ -2,6 +2,22 @@
 {% block page_title %}Orders{% endblock %}
 {% block content %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 {% if order_list %}
     <table class="table table-bordered">
         <h5>Orders</h5>

@@ -4,6 +4,22 @@
 
 {% block content %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 Total Stock: {{ inventoryItem.total_stock }} <br>
 Current Stock: {{ inventoryItem.currentStock }}<br>
 Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br>

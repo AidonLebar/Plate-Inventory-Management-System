@@ -2,6 +2,22 @@
 {% block page_title %}{{ order }}{% endblock %}
 {% block content %}
 
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
 Start Time: {{ order.start_time }} <br>
 End Time: {{ order.end_time }} <br>
 
