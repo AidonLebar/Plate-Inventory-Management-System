@@ -22,7 +22,9 @@
 
 <form action="/itemAdded/" method="post" >
     {% csrf_token %}
-    {{ additemform }} <br>
+    <div class="">
+        {{ additemform }} <br>
+    </div>
     <button type="submit" class="btn btn-outline-primary">Submit</button>
 </form>
 

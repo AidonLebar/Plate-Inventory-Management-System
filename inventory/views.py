@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm
+from .forms import quickOrderForm, addItemForm, orderForm
 
 def index(request):
     form = quickOrderForm()
@@ -73,14 +73,15 @@ def itemAdded(request):
 
 def placeOrder(request):
     form = quickOrderForm()
-    return render(request, 'inventory/placeOrder.html', {'form':form})
+    orderform = orderForm()
+    return render(request, 'inventory/placeOrder.html', {'form':form, 'placeorderform': orderform})
 
 def deleteItem(request):
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
         item_name = request.POST['item_name']
         if item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon':
-            messages.warning(request, "%s should not be deleted for internal reasons." % item_name)
+            messages.warning(request, "%s is a default item and cannot be deleted." % item_name)
         else:
             inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
             inventoryItem.delete()

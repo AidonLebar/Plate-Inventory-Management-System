@@ -1,5 +1,6 @@
 from django import forms
 from django.core.validators import MinValueValidator
+import datetime
 
 class quickOrderForm(forms.Form):
     QUICK_ORDER_CHOICES =(
@@ -15,3 +16,8 @@ class quickOrderForm(forms.Form):
 class addItemForm(forms.Form):
     item_name = forms.CharField(label='Item Name', max_length=100)
     stock = forms.IntegerField(validators=[MinValueValidator(1)])
+
+class orderForm(forms.Form):
+    borrower_name = forms.CharField(label='Borrower Name', max_length=100)
+    start_time = forms.DateTimeField(label='Start Date and Time', initial=datetime.date.today)
+    end_time = forms.DateTimeField(label='End Date and Time', initial=datetime.date.today)
