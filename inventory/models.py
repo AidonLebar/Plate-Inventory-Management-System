@@ -22,6 +22,8 @@ class InventoryItem(models.Model):
         for  i in self.orderitem_set.all():
             if i.activeOrderItem():
                 stock = stock - i.quantity_borrowed + i.quantity_returned
+            elif i.order.end_time < timezone.now():
+                stock = stock - i.quantity_borrowed + i.quantity_returned
         return stock
 
     def clean(self):
