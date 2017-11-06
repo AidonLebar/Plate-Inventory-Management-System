@@ -21,7 +21,7 @@ class InventoryItem(models.Model):
         stock = self.total_stock
         for  i in self.orderitem_set.all():
             if i.activeOrderItem():
-                stock = stock - i.quantity_borrowed
+                stock = stock - i.quantity_borrowed + i.quantity_returned
         return stock
 
     def clean(self):
