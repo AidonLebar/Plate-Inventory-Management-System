@@ -87,3 +87,12 @@ def deleteItem(request):
             messages.success(request, '%s was successfully deleted.' % item_name)
 
     return HttpResponseRedirect('/inventory/')
+
+def deleteOrder(request):
+    if request.method == 'POST':
+        order_id=request.POST['order_id']
+        order = get_object_or_404(Order, pk=order_id)
+        order.delete()
+        messages.success(request, 'Order was successfully deleted.')
+
+    return HttpResponseRedirect('/orders/')

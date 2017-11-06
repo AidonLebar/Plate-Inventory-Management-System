@@ -20,6 +20,11 @@
 
 Start Time: {{ order.start_time }} <br>
 End Time: {{ order.end_time }} <br>
+<form action = "/deleteOrder/" method="post" name="deleteOrderForm">
+	{% csrf_token %}
+	<input type="hidden", name="order_id", value={{ order.id }}>
+	<button type="submit" class="btn btn-danger">Delete</button>
+</form>
 
 <br>
 <table class="table table-bordered">
