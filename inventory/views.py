@@ -157,10 +157,20 @@ def addOrderItem(request):
             order_id = request.POST['order_id']
             order = get_object_or_404(Order, pk=order_id)
             quantity = form.cleaned_data['quantity_to_borrow']
+            available = item.total_stock
             oi = OrderItem(item = item, order = order, quantity_borrowed = quantity)
-            oi.save()
-            messages.success(request, 'Item added successfully.')
-            return HttpResponseRedirect('/order/%d/' % order.id)
+            for e in Order.objects.all():
+                if not(((e.start_time > oi.order.end_time))or((e.end_time < oi.order.start_time))):
+                    for i in e.orderitem_set.all():
+                        if i.item.item_name == oi.item.item_name:
+                            available -= i.quantity_borrowed
+            if quantity < available:
+                oi.save()
+                messages.success(request, 'Item added successfully.')
+                return HttpResponseRedirect('/order/%d/' % order.id)
+            else:
+                messages.error(request, "Can't borrow desired quantity, only %d available during that time." %available)
+                return HttpResponseRedirect('/order/%d/' % order.id)
         else:
             messages.error(request, 'Amount to borrow must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
