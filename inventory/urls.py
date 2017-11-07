@@ -18,5 +18,6 @@ urlpatterns = [
     url(r'^orderPlaced/$', views.orderPlaced, name='orderPlaced'),
     url(r'^returnItem/$', views.returnItem, name='returnItem'),
     url(r'^returnAll/$', views.returnAll, name='returnAll'),
+    url(r'^addOrderItem/$', views.addOrderItem, name='addOrderItem'),
 
 ]

@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm
+from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm
 
 def index(request):
     form = quickOrderForm()
@@ -33,7 +33,8 @@ def inventoryDetail(request, inventory_item_id):
 def orderDetail(request, order_id):
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
-    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm})
+    inventory_list = InventoryItem.objects.order_by('item_name')
+    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': addOrderItemForm()})
 
 def quickOrder(request):
     if request.method == 'POST':
@@ -147,3 +148,19 @@ def returnAll(request):
             item.save()
         messages.success(request, 'All items returned.')
         return HttpResponseRedirect('/order/%d/' % order.id)
+
+def addOrderItem(request):
+    if request.method == 'POST':
+        form = addOrderItemForm(request.POST)
+        if form.is_valid():
+            item = form.cleaned_data['item_to_add']
+            order_id = request.POST['order_id']
+            order = get_object_or_404(Order, pk=order_id)
+            quantity = form.cleaned_data['quantity_to_borrow']
+            oi = OrderItem(item = item, order = order, quantity_borrowed = quantity)
+            oi.save()
+            messages.success(request, 'Item added successfully.')
+            return HttpResponseRedirect('/order/%d/' % order.id)
+        else:
+            messages.error(request, 'Amount to borrow must be greater than 0.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

@@ -1,6 +1,7 @@
 from django import forms
 from django.core.validators import MinValueValidator
 import datetime
+from .models import InventoryItem
 
 class quickOrderForm(forms.Form):
     QUICK_ORDER_CHOICES =(
@@ -23,4 +24,9 @@ class orderForm(forms.Form):
     end_time = forms.DateTimeField(label='End Date and Time', initial=datetime.date.today)
 
 class returnItemForm(forms.Form):
-    returned = forms.IntegerField(validators=[MinValueValidator(1)],label=False)
+    returned = forms.IntegerField(validators=[MinValueValidator(0)],label=False)
+
+class addOrderItemForm(forms.Form):
+    item_queryset = InventoryItem.objects.all()
+    item_to_add = forms.ModelChoiceField(required=True, queryset=InventoryItem.objects.all())
+    quantity_to_borrow = forms.IntegerField(validators=[MinValueValidator(1)],label=False)
