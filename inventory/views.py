@@ -30,11 +30,17 @@ def inventoryDetail(request, inventory_item_id):
     inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
     return render(request, 'inventory/inventoryDetail.html', {'inventoryItem': inventoryItem, 'form': form})
 
+from django import forms
+
 def orderDetail(request, order_id):
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
     inventory_list = InventoryItem.objects.order_by('item_name')
-    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': addOrderItemForm()})
+    order_item_form = addOrderItemForm()
+    order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
+        id__in=[o.item.id for o in order.orderitem_set.all()]
+    )
+    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': order_item_form})
 
 def quickOrder(request):
     if request.method == 'POST':

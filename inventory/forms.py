@@ -28,5 +28,5 @@ class returnItemForm(forms.Form):
 
 class addOrderItemForm(forms.Form):
     item_queryset = InventoryItem.objects.all()
-    item_to_add = forms.ModelChoiceField(required=True, queryset=InventoryItem.objects.all())
+    item_to_add = forms.ModelChoiceField(required=True, queryset=item_queryset)
     quantity_to_borrow = forms.IntegerField(validators=[MinValueValidator(1)],label=False)
