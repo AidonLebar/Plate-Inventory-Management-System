@@ -20,7 +20,7 @@
 
 Start Time: {{ order.start_time }} <br>
 End Time: {{ order.end_time }} <br>
-<div class="row">
+<div class="btn-group" role="group" aria-label="Basic example">
     <form action = "/returnAll/" method="post">
     	{% csrf_token %}
     	<input type="hidden", name="order_id", value={{ order.id }}>
@@ -32,7 +32,7 @@ End Time: {{ order.end_time }} <br>
     	<input type="hidden", name="order_id", value={{ order.id }}>
     	<button type="submit" class="btn btn-outline-danger">Delete</button>
     </form>
-</div>
+</div><br>
 
 
 <br>
