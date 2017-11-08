@@ -23,4 +23,5 @@ urlpatterns = [
     url(r'^itemEdited/$', views.itemEdited, name='itemEdited'),
     url(r'^editOrder/$', views.editOrder, name='editOrder'),
     url(r'^orderEdited/$', views.orderEdited, name='orderEdited'),
+    url(r'^editOrderItem/$', views.editOrderItem, name='editOrderItem'),
 ]

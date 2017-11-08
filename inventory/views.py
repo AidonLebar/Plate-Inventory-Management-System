@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm, editOrderForm
+from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm, editOrderForm, editOrderItemForm
 
 def index(request):
     form = quickOrderForm()
@@ -40,7 +40,8 @@ def orderDetail(request, order_id):
     order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
         id__in=[o.item.id for o in order.orderitem_set.all()]
     )
-    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': order_item_form})
+    edit_order_item_form = editOrderItemForm()
+    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': order_item_form, 'editOrderItemForm': edit_order_item_form})
 
 def quickOrder(request):
     if request.method == 'POST':
@@ -238,3 +239,25 @@ def orderEdited(request):
         else:
             messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def editOrderItem(request):
+    if request.method == 'POST':
+        form = editOrderItemForm(request.POST)
+        if form.is_valid():
+            order_id=request.POST['order_id']
+            order = get_object_or_404(Order, pk=order_id)
+            order_item_id = request.POST['order_item_id']
+            order_item = get_object_or_404(OrderItem, pk=order_item_id)
+            new_quantity = form.cleaned_data['quantity']
+            if new_quantity == 0:
+                order_item.delete()
+                messages.success(request, 'Item deleted because quantity borrowed is 0.')
+                return HttpResponseRedirect('/order/%d/' % order.id)
+            else:
+                order_item.quantity_borrowed = new_quantity
+                order_item.save()
+                messages.success(request, '%s quantity successfully changed' %order_item.item)
+                return HttpResponseRedirect('/order/%d/' % order.id)
+        else:
+            messages.error(request, 'Quantity must be 0(if you wish to delete item) or greater.')
+            return HttpResponseRedirect('/order/%d/' % order.id)

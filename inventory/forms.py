@@ -40,3 +40,6 @@ class editOrderForm(forms.Form):
     new_borrower = forms.CharField(label="Borrower's Name", max_length=100, initial = "")
     new_start_time = forms.DateTimeField(label='Start Date and Time', initial=datetime.date.today)
     new_end_time = forms.DateTimeField(label='End Date and Time', initial=datetime.date.today)
+
+class editOrderItemForm(forms.Form):
+    quantity = forms.IntegerField(validators=[MinValueValidator(0)],label=False)
