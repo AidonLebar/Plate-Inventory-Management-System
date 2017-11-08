@@ -41,7 +41,8 @@ def orderDetail(request, order_id):
         id__in=[o.item.id for o in order.orderitem_set.all()]
     )
     edit_order_item_form = editOrderItemForm()
-    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': returnItemForm, 'inventory_list': inventory_list, 'addForm': order_item_form, 'editOrderItemForm': edit_order_item_form})
+    return_item_form = returnItemForm()
+    return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': return_item_form, 'inventory_list': inventory_list, 'addForm': order_item_form, 'editOrderItemForm': edit_order_item_form})
 
 def quickOrder(request):
     if request.method == 'POST':
