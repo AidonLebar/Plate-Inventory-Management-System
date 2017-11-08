@@ -42,4 +42,4 @@ class editOrderForm(forms.Form):
     new_end_time = forms.DateTimeField(label='End Date and Time', initial=datetime.date.today)
 
 class editOrderItemForm(forms.Form):
-    quantity = forms.IntegerField(validators=[MinValueValidator(0)],label=False)
+    quantity = forms.IntegerField(validators=[MinValueValidator(1)],label=False)

@@ -249,15 +249,20 @@ def editOrderItem(request):
             order_item_id = request.POST['order_item_id']
             order_item = get_object_or_404(OrderItem, pk=order_item_id)
             new_quantity = form.cleaned_data['quantity']
-            if new_quantity == 0:
-                order_item.delete()
-                messages.success(request, 'Item deleted because quantity borrowed is 0.')
-                return HttpResponseRedirect('/order/%d/' % order.id)
-            else:
-                order_item.quantity_borrowed = new_quantity
-                order_item.save()
-                messages.success(request, '%s quantity successfully changed' %order_item.item)
-                return HttpResponseRedirect('/order/%d/' % order.id)
-        else:
-            messages.error(request, 'Quantity must be 0(if you wish to delete item) or greater.')
+            order_item.quantity_borrowed = new_quantity
+            order_item.save()
+            messages.success(request, '%s quantity successfully changed' %order_item.item)
             return HttpResponseRedirect('/order/%d/' % order.id)
+        else:
+            messages.error(request, 'Quantity must be greater than 0.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def deleteOrderItem(request):
+    if request.method == 'POST':
+        order_id=request.POST['order_id']
+        order = get_object_or_404(Order, pk=order_id)
+        order_item_id = request.POST['order_item_id']
+        order_item = get_object_or_404(OrderItem, pk=order_item_id)
+        order_item.delete()
+        messages.success(request, '%s successfully deleted' %order_item.item)
+        return HttpResponseRedirect('/order/%d/' % order.id)

@@ -4,7 +4,7 @@ from . import views
 
 app_name = 'inventory'
 urlpatterns = [
-    url(r'^$', views.index, name='index'),
+    url(r'^$', views.inventoryItemIndex, name='inventoryItemIndex'),
     url(r'^inventory/$', views.inventoryItemIndex, name='inventoryItemIndex'),
     url(r'^orders/$', views.orderIndex, name='orderIndex'),
     url(r'^inventoryItem/(?P<inventory_item_id>[0-9]+)/$', views.inventoryDetail, name='inventoryDetail'),
@@ -24,4 +24,5 @@ urlpatterns = [
     url(r'^editOrder/$', views.editOrder, name='editOrder'),
     url(r'^orderEdited/$', views.orderEdited, name='orderEdited'),
     url(r'^editOrderItem/$', views.editOrderItem, name='editOrderItem'),
+    url(r'^deleteOrderItem/$', views.deleteOrderItem, name='deleteOrderItem'),
 ]
