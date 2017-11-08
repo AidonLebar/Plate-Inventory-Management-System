@@ -24,12 +24,20 @@ Total Stock: {{ inventoryItem.total_stock }} <br>
 Current Stock: {{ inventoryItem.currentStock }}<br>
 Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br>
 
-<form action = "/deleteItem/" method="post" name="deleteItemForm">
-	{% csrf_token %}
-	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
-	<input type="hidden", name="item_name", value={{ inventoryItem }}>
-	<button type="submit" class="btn btn-outline-danger">Delete</button>
-</form>
+<div class="btn-group" role="group" aria-label="Basic example">
+    <form action = "/inventory/" method="post" name="deleteOrderForm">
+    	{% csrf_token %}
+    	<input type="hidden", name="order_id", value={{ order.id }}>
+    	<button type="submit" class="btn btn-outline-secondary">Edit</button>
+    </form>
+
+    <form action = "/deleteItem/" method="post" name="deleteItemForm">
+    	{% csrf_token %}
+    	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
+    	<input type="hidden", name="item_name", value={{ inventoryItem }}>
+    	<button type="submit" class="btn btn-outline-danger">Delete</button>
+    </form>
+</div>
 
 <br>
 <table class="table table-bordered">
