@@ -126,7 +126,8 @@ def orderPlaced(request):
                 messages.error(request, 'Start date must be before end date.')
                 return HttpResponseRedirect('/placeOrder/')
         else:
-            return HttpResponseRedirect('/orders/')
+            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
+            return HttpResponseRedirect('/placeOrder/')
 
 def returnItem(request):
     if request.method == 'POST':
