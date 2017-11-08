@@ -18,7 +18,7 @@
 </ul>
 {% endif %}
 
-<form action = "/orders/" method="post">
+<form action = "/orderEdited/" method="post">
     <input type="hidden", name="order_id", value={{ order.id }}>
     {% csrf_token %}
     <table>
