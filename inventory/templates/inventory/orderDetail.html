@@ -28,7 +28,6 @@ End Time: {{ order.end_time }} <br>
     </form>
 
     <form action = "/editOrder/" method="get">
-    	{% csrf_token %}
     	<input type="hidden", name="order_id", value={{ order.id }}>
     	<button type="submit" class="btn btn-outline-secondary">Edit</button>
     </form>

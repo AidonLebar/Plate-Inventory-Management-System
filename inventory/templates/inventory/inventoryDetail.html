@@ -26,7 +26,6 @@ Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br
 
 <div class="btn-group" role="group" aria-label="Basic example">
     <form action = "/editItem/" method="get">
-    	{% csrf_token %}
     	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
     	<button type="submit" class="btn btn-outline-secondary">Edit</button>
     </form>
