@@ -5,6 +5,7 @@ from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
+from django import forms
 
 from .models import InventoryItem, Order, OrderItem
 from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm, editOrderForm, editOrderItemForm
@@ -29,8 +30,6 @@ def inventoryDetail(request, inventory_item_id):
     form = quickOrderForm()
     inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
     return render(request, 'inventory/inventoryDetail.html', {'inventoryItem': inventoryItem, 'form': form})
-
-from django import forms
 
 def orderDetail(request, order_id):
     form = quickOrderForm()
@@ -186,7 +185,6 @@ def addOrderItem(request):
         else:
             messages.error(request, 'Amount to borrow must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-
 
 def editItem(request):
   if request.method == 'GET':
