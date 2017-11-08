@@ -30,3 +30,9 @@ class addOrderItemForm(forms.Form):
     item_queryset = InventoryItem.objects.all()
     item_to_add = forms.ModelChoiceField(required=True, queryset=item_queryset)
     quantity_to_borrow = forms.IntegerField(validators=[MinValueValidator(1)],label=False)
+
+class editItemForm(forms.Form):
+    item = "None"
+    stock = 1
+    new_name = forms.CharField(label='Item Name', max_length=100, initial = "test")
+    new_total_stock = forms.IntegerField(validators=[MinValueValidator(1)],label='Total Stock', initial = stock)

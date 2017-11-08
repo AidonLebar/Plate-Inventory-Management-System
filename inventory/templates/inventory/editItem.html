@@ -1,0 +1,30 @@
+{% extends 'inventory/base.html' %}
+{% block page_title %}{{ item }}{% endblock %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+<form action = "/itemEdited/" method="post">
+    <input type="hidden", name="item_id", value={{ item.id }}>
+    {% csrf_token %}
+    <table>
+        {{ editForm.as_table }}
+    </table>
+    <button type="submit" class="btn btn-outline-primary">Confirm</button>
+</form>
+
+{% endblock %}

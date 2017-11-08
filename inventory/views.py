@@ -1,13 +1,13 @@
 import datetime
 
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from django.http import HttpResponse, HttpResponseRedirect
 from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm
+from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm
 
 def index(request):
     form = quickOrderForm()
@@ -179,4 +179,35 @@ def addOrderItem(request):
                 return HttpResponseRedirect('/order/%d/' % order.id)
         else:
             messages.error(request, 'Amount to borrow must be greater than 0.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+
+def editItem(request):
+  if request.method == 'GET':
+    item_id=request.GET['item_id']
+    item = get_object_or_404(InventoryItem, pk=item_id)
+    form = quickOrderForm()
+    edit_item_form = editItemForm()
+    edit_item_form.fields['new_name'].initial = item.item_name
+    edit_item_form.fields['new_total_stock'].initial = item.total_stock
+    return render(request, 'inventory/editItem.html', {'item': item, 'form':form, 'editForm': edit_item_form})
+
+def itemEdited(request):
+    if request.method == 'POST':
+        form = editItemForm(request.POST)
+        if form.is_valid():
+            item_id=request.POST['item_id']
+            item = get_object_or_404(InventoryItem, pk=item_id)
+            item_name = item.item_name
+            if (item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon') and item_name != form.cleaned_data['new_name']:
+                messages.warning(request, "%s is a default item and the name cannot be edited." % item_name)
+                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+            else:
+                item.item_name = form.cleaned_data['new_name']
+                item.total_stock = form.cleaned_data['new_total_stock']
+                item.save()
+                messages.success(request, 'Item successfully updated.')
+                return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
+        else:
+            messages.error(request, 'Total Stock must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))

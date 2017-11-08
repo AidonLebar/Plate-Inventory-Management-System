@@ -19,5 +19,7 @@ urlpatterns = [
     url(r'^returnItem/$', views.returnItem, name='returnItem'),
     url(r'^returnAll/$', views.returnAll, name='returnAll'),
     url(r'^addOrderItem/$', views.addOrderItem, name='addOrderItem'),
+    url(r'^editItem/$', views.editItem, name='editItem'),
+    url(r'^itemEdited/$', views.itemEdited, name='itemEdited'),
 
 ]
