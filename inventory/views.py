@@ -7,7 +7,7 @@ from django.utils import timezone
 from django.contrib import messages
 
 from .models import InventoryItem, Order, OrderItem
-from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm
+from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm, editOrderForm
 
 def index(request):
     form = quickOrderForm()
@@ -210,4 +210,31 @@ def itemEdited(request):
                 return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
         else:
             messages.error(request, 'Total Stock must be greater than 0.')
+            return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
+
+def editOrder(request):
+    if request.method == 'GET':
+        order_id=request.GET['order_id']
+        order = get_object_or_404(Order, pk=order_id)
+        form = quickOrderForm()
+        edit_order_form = editOrderForm()
+        edit_order_form.fields['new_borrower'].initial = order.borrower_name
+        edit_order_form.fields['new_start_time'].initial = order.start_time
+        edit_order_form.fields['new_end_time'].initial = order.end_time
+        return render(request, 'inventory/editOrder.html', {'order': order, 'form':form, 'editForm':edit_order_form})
+
+def orderEdited(request):
+    if request.method == 'POST':
+        form = editOrderForm(request.POST)
+        if form.is_valid():
+            order_id = request.POST['order_id']
+            order = get_object_or_404(Order, pk=order_id)
+            order.borrower_name = form.cleaned_data['new_borrower']
+            order.start_time = form.cleaned_data['new_start_time']
+            order.end_time = form.cleaned_data['new_end_time']
+            order.save()
+            messages.success(request, 'Order successfully updated.')
+            return HttpResponseRedirect('/order/%d/' % order.id)
+        else:
+            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
