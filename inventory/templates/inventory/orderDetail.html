@@ -27,7 +27,7 @@ End Time: {{ order.end_time }} <br>
     	<button type="submit" class="btn btn-outline-primary">Return All</button>
     </form>
 
-    <form action = "/orders/" method="post" name="deleteOrderForm">
+    <form action = "/editOrder/" method="get">
     	{% csrf_token %}
     	<input type="hidden", name="order_id", value={{ order.id }}>
     	<button type="submit" class="btn btn-outline-secondary">Edit</button>
