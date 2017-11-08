@@ -72,10 +72,14 @@ def itemAdded(request):
         if form.is_valid():
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
-            i = InventoryItem(item_name = name, total_stock = stock)
-            i.save()
-            messages.success(request, '%s added successfully.' % name)
-            return HttpResponseRedirect('/addItem/')
+            if name not in [item.item_name for item in InventoryItem.objects.all()]:
+                i = InventoryItem(item_name = name, total_stock = stock)
+                i.save()
+                messages.success(request, '%s added successfully.' % name)
+                return HttpResponseRedirect('/addItem/')
+            else:
+                messages.error(request, 'Item with name %s already exists, please use a unique name.' % name)
+                return HttpResponseRedirect('/addItem/')
         else:
             messages.error(request, 'Item was not added. Stock must be greater than 0.')
             return HttpResponseRedirect('/addItem/')
