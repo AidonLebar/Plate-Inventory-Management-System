@@ -6,31 +6,37 @@ from django.urls import reverse
 from django.utils import timezone
 from django.contrib import messages
 from django import forms
+from django.contrib.auth.decorators import login_required
 
 from .models import InventoryItem, Order, OrderItem
 from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOrderItemForm, editItemForm, editOrderForm, editOrderItemForm
 
+@login_required
 def index(request):
     form = quickOrderForm()
     return render(request, 'inventory/index.html', {'form': form})
 
+@login_required
 def inventoryItemIndex(request):
     inventory_item_list = InventoryItem.objects.order_by('item_name')
     form = quickOrderForm()
     context = {'inventory_item_list': inventory_item_list, 'form': form}
     return render(request, 'inventory/inventoryItemIndex.html', context)
 
+@login_required
 def orderIndex(request):
     order_list = Order.objects.order_by('start_time')
     form = quickOrderForm()
     context = {'order_list': order_list, 'form': form}
     return render(request, 'inventory/orderIndex.html', context)
 
+@login_required
 def inventoryDetail(request, inventory_item_id):
     form = quickOrderForm()
     inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
     return render(request, 'inventory/inventoryDetail.html', {'inventoryItem': inventoryItem, 'form': form})
 
+@login_required
 def orderDetail(request, order_id):
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
@@ -43,6 +49,7 @@ def orderDetail(request, order_id):
     return_item_form = returnItemForm()
     return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': return_item_form, 'inventory_list': inventory_list, 'addForm': order_item_form, 'editOrderItemForm': edit_order_item_form})
 
+@login_required
 def quickOrder(request):
     if request.method == 'POST':
         form = quickOrderForm(request.POST)
@@ -60,11 +67,13 @@ def quickOrder(request):
     else:
         return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def addItem(request):
     form = quickOrderForm()
     additemform = addItemForm()
     return render(request, 'inventory/addItem.html', {'form':form, 'additemform': additemform})
 
+@login_required
 def itemAdded(request):
     if request.method == 'POST':
         form = addItemForm(request.POST)
@@ -83,11 +92,13 @@ def itemAdded(request):
             messages.error(request, 'Item was not added. Stock must be greater than 0.')
             return HttpResponseRedirect('/addItem/')
 
+@login_required
 def placeOrder(request):
     form = quickOrderForm()
     orderform = orderForm()
     return render(request, 'inventory/placeOrder.html', {'form':form, 'placeorderform': orderform})
 
+@login_required
 def deleteItem(request):
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
@@ -101,6 +112,7 @@ def deleteItem(request):
 
     return HttpResponseRedirect('/inventory/')
 
+@login_required
 def deleteOrder(request):
     if request.method == 'POST':
         order_id=request.POST['order_id']
@@ -110,6 +122,7 @@ def deleteOrder(request):
 
     return HttpResponseRedirect('/orders/')
 
+@login_required
 def orderPlaced(request):
     if request.method == 'POST':
         form = orderForm(request.POST)
@@ -129,6 +142,7 @@ def orderPlaced(request):
             messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect('/placeOrder/')
 
+@login_required
 def returnItem(request):
     if request.method == 'POST':
         form = returnItemForm(request.POST)
@@ -151,6 +165,7 @@ def returnItem(request):
             messages.error(request, 'Returned amount must be positive')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def returnAll(request):
     if request.method == 'POST':
         order_id=request.POST['order_id']
@@ -161,6 +176,7 @@ def returnAll(request):
         messages.success(request, 'All items returned.')
         return HttpResponseRedirect('/order/%d/' % order.id)
 
+@login_required
 def addOrderItem(request):
     if request.method == 'POST':
         form = addOrderItemForm(request.POST)
@@ -187,6 +203,7 @@ def addOrderItem(request):
             messages.error(request, 'Amount to borrow must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def editItem(request):
   if request.method == 'GET':
     item_id=request.GET['item_id']
@@ -197,6 +214,7 @@ def editItem(request):
     edit_item_form.fields['new_total_stock'].initial = item.total_stock
     return render(request, 'inventory/editItem.html', {'item': item, 'form':form, 'editForm': edit_item_form})
 
+@login_required
 def itemEdited(request):
     if request.method == 'POST':
         form = editItemForm(request.POST)
@@ -217,6 +235,7 @@ def itemEdited(request):
             messages.error(request, 'Total Stock must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def editOrder(request):
     if request.method == 'GET':
         order_id=request.GET['order_id']
@@ -228,6 +247,7 @@ def editOrder(request):
         edit_order_form.fields['new_end_time'].initial = order.end_time
         return render(request, 'inventory/editOrder.html', {'order': order, 'form':form, 'editForm':edit_order_form})
 
+@login_required
 def orderEdited(request):
     if request.method == 'POST':
         form = editOrderForm(request.POST)
@@ -244,6 +264,7 @@ def orderEdited(request):
             messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def editOrderItem(request):
     if request.method == 'POST':
         form = editOrderItemForm(request.POST)
@@ -261,6 +282,7 @@ def editOrderItem(request):
             messages.error(request, 'Quantity must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
+@login_required
 def deleteOrderItem(request):
     if request.method == 'POST':
         order_id=request.POST['order_id']
