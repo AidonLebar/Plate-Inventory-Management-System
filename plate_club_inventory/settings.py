@@ -123,3 +123,4 @@ STATIC_URL = '/static/'
 # THAT CUSTOM SHIT
 
 LOGIN_URL = '/login/'
+LOGIN_REDIRECT_URL = '/'

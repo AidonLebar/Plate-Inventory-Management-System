@@ -1,0 +1,21 @@
+{% extends "inventory/base.html" %}
+
+{% block big_boss %}
+<main role="main" class="col-sm-12 ml-sm-auto col-md-12 pt-3">
+    <h1>Logged Out</h1>
+
+{% if form.errors %}
+<p>Your username and password didn't match. Please try again.</p>
+{% endif %}
+
+{% if next %}
+    {% if user.is_authenticated %}
+    <p>Your account doesn't have access to this page. To proceed,
+    please login with an account that has access.</p>
+    {% else %}
+    <p>Please login to see this page.</p>
+    {% endif %}
+{% endif %}
+
+<p><a href="/login/"}>Log in?</a></p>
+{% endblock %}
