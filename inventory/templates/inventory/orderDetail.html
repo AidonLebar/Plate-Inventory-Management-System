@@ -1,0 +1,110 @@
+{% extends 'inventory/base.html' %}
+{% block page_title %}{{ order }}{% endblock %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+Start Time: {{ order.start_time }} <br>
+End Time: {{ order.end_time }} <br>
+<div class="btn-group" role="group">
+    <form action = "/returnAll/" method="post">
+    	{% csrf_token %}
+    	<input type="hidden", name="order_id", value={{ order.id }}>
+    	<button type="submit" class="btn btn-outline-primary">Return All</button>
+    </form>
+
+    <form action = "/editOrder/" method="get">
+    	<input type="hidden", name="order_id", value={{ order.id }}>
+    	<button type="submit" class="btn btn-outline-secondary">Edit</button>
+    </form>
+
+    <form action = "/deleteOrder/" method="post" name="deleteOrderForm">
+    	{% csrf_token %}
+    	<input type="hidden", name="order_id", value={{ order.id }}>
+    	<button type="submit" class="btn btn-outline-danger">Delete</button>
+    </form>
+
+</div><br>
+
+
+<br>
+<table class="table table-bordered">
+	<h5>Items in Order</h5>
+  <thead>
+	<tr>
+	  <th>Item</th>
+	  <th>Quantity Borrowed</th>
+      <th> Quantity Returned</th>
+	</tr>
+  </thead>
+  <tbody>
+			{% for orderitem in order.orderitem_set.all %}<br>
+			<tr>
+				<td>
+                    <a href="/inventoryItem/{{ orderitem.item.id }}/">{{ orderitem.item.item_name }}
+                        <form action="/deleteOrderItem/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden", name="order_item_id", value={{ orderitem.id }}>
+                            <input type="hidden", name="order_id", value={{ order.id }}>
+                            <button type="submit" class="btn btn-outline-danger btn-sm">Delete</button>
+                        </form>
+                </td>
+
+				<td>
+                    {{ orderitem.quantity_borrowed }}<br>
+                        <form action="/editOrderItem/" method="post">
+                            {% csrf_token %}
+                            <input type="hidden", name="order_item_id", value={{ orderitem.id }}>
+                            <input type="hidden", name="order_id", value={{ order.id }}>
+                            {{ editOrderItemForm.quantity }}
+                            <button type="submit" class="btn btn-outline-secondary btn-sm">Submit</button>
+                        </form>
+                </td>
+
+                <td>
+                    {{ orderitem.quantity_returned }}
+                    <form action="/returnItem/" method="post">
+                        {% csrf_token %}
+                        <input type="hidden", name="order_item_id", value={{ orderitem.id }}>
+                        <input type="hidden", name="order_id", value={{ order.id }}>
+                        {{ returnItemForm.returned }}
+                        <button type="submit" class="btn btn-outline-secondary btn-sm">Submit</button>
+                    </form>
+                </td>
+			</tr>
+			{% endfor %}
+            <tr>
+                    <form action="/addOrderItem/" method="post">
+                        <input type="hidden", name="order_id", value={{ order.id }}>
+                        {% csrf_token %}
+                        <td>
+                            <label>New Item</label><br>
+                            {{ addForm.item_to_add }}
+                        </td>
+                        <td>
+                            <label>Quantity</label><br>
+                            {{ addForm.quantity_to_borrow }}
+                        </td>
+                        <td><br><button type="submit" class="btn btn-outline-secondary">Submit</button></td>
+                    </form>
+                </td>
+            </tr>
+  </tbody>
+</table>
+<br>
+
+{% endblock %}

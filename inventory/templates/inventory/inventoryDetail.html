@@ -1,0 +1,71 @@
+{% extends 'inventory/base.html' %}
+
+{% block page_title %}{{ inventoryItem }}{% endblock %}
+
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+Total Stock: {{ inventoryItem.total_stock }} <br>
+Current Stock: {{ inventoryItem.currentStock }}<br>
+Average Order Size for {{ inventoryItem }}s: {{ inventoryItem.averageOrder }}<br>
+
+<div class="btn-group" role="group" aria-label="Basic example">
+    <form action = "/editItem/" method="get">
+    	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
+    	<button type="submit" class="btn btn-outline-secondary">Edit</button>
+    </form>
+
+    <form action = "/deleteItem/" method="post" name="deleteItemForm">
+    	{% csrf_token %}
+    	<input type="hidden", name="item_id", value={{ inventoryItem.id }}>
+    	<input type="hidden", name="item_name", value={{ inventoryItem }}>
+    	<button type="submit" class="btn btn-outline-danger">Delete</button>
+    </form>
+</div>
+
+<br>
+<table class="table table-bordered">
+	<h5>Orders of This Item</h5>
+  <thead>
+	<tr>
+	  <th>Borrower</th>
+	  <th>Quantity Borrowed</th>
+      <th>Quantity Returned</th>
+	</tr>
+  </thead>
+  <tbody>
+			{% for orderitem in inventoryItem.orderitem_set.all %}
+				{% if orderitem.order.quick_order == False %}
+					<tr>
+						<td><a href="/order/{{ orderitem.order.id }}/">{{ orderitem.order }}</td>
+						<td>{{ orderitem.quantity_borrowed }}</td>
+		                <td>{{ orderitem.quantity_returned }}</td>
+					</tr>
+				{% else %}
+					<tr style="color:gray;">
+						<td><a href="/order/{{ orderitem.order.id }}/" style="color: gray;">{{ orderitem.order }}</td>
+						<td>{{ orderitem.quantity_borrowed }}</td>
+						<td>{{ orderitem.quantity_returned }}</td>
+					</tr>
+				{% endif %}
+			{% endfor %}
+  </tbody>
+</table>
+<br>
+
+{% endblock %}

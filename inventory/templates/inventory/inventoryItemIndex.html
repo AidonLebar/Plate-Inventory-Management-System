@@ -1,0 +1,45 @@
+{% extends 'inventory/base.html' %}
+{% block content %}
+
+{% if messages %}
+<ul class="messages">
+    {% for message in messages %}
+        {% if message.tags == "success" %}
+            <li class = "alert alert-success">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "error" %}
+            <li class = "alert alert-danger">{{ message }}</li>
+        {% endif %}
+        {% if message.tags == "warning" %}
+            <li class = "alert alert-warning">{{ message }}</li>
+        {% endif %}
+    {% endfor %}
+</ul>
+{% endif %}
+
+{% block page_title %}Inventory{% endblock %}
+{% if inventory_item_list %}
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>Item</th>
+          <th>Total Stock</th>
+          <th>Current Stock</th>
+        </tr>
+      </thead>
+      <tbody>
+                {% for item in inventory_item_list %}
+                <tr>
+                    <td><a href="/inventoryItem/{{ item.id }}/">{{ item.item_name }}</td>
+                    <td>{{ item.total_stock }}</td>
+                    <td>{{ item.currentStock }}</td>
+                </tr>
+                {% endfor %}
+      </tbody>
+    </table>
+
+{% else %}
+  <p>No items exist in database</p>
+{% endif %}
+
+{% endblock %}
