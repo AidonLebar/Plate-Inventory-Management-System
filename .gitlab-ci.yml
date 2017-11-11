@@ -9,7 +9,7 @@ deploy_job:
   - rm -rf $CI_PROJECT_DIR/*                       # Remove the existing app instance.
   - cp -r ./* $CI_PROJECT_DIR/                     # Copy files from the build directory into the deploy directory.
   - cd $CI_PROJECT_DIR
-  - chgrp -R gitlab-runner ./*
+  - chown -R www-data:gitlab-runner ./*
   - chmod 770 -R ./*                               # No-one except plateclub and gitlab-runner should have access.
   - virtualenv env -p python3                      # Create the python virtual environment in the deploy directory...
   - source env/bin/activate                        # ... and activate it.
