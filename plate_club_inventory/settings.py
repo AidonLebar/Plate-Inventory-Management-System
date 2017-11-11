@@ -25,7 +25,7 @@ SECRET_KEY = 'qn64b%r$!49@3(em8%zmvup#uc3cq*r$-q68zq4n0cpa#zduu3'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', 'plateclub.sus.mcgill.ca']
 
 
 # Application definition
