@@ -1,0 +1,23 @@
+stages:
+  - deploy
+
+deploy_job:
+  stage: deploy
+  variables:
+    CI_PROJECT_DIR: '/home/plateclub/plate-club-inventory'
+  script:
+  - rm -rf $CI_PROJECT_DIR/*                       # Remove the existing app instance.
+  - cp -r ./* $CI_PROJECT_DIR/                     # Copy files from the build directory into the deploy directory.
+  - cd $CI_PROJECT_DIR
+  - chgrp -R gitlab-runner ./*
+  - chmod 770 -R ./*                               # No-one except plateclub and gitlab-runner should have access.
+  - virtualenv env -p python3                      # Create the python virtual environment in the deploy directory...
+  - source env/bin/activate                        # ... and activate it.
+  - pip3 install -r requirements.txt               # Install all dependencies from the requirements file.
+  - python3 ./manage.py migrate                    # Run any outstanding database migrations.
+  - python3 ./manage.py collectstatic              # Collect any static files into the static_collected directory.
+  environment:
+    name: production
+    url: https://plateclub.sus.mcgill.ca
+  only:
+  - /^production-v\d+\.\d+\.\d+$/                  # Matches production-v0.1.0, production-v10.34.1, etc.
