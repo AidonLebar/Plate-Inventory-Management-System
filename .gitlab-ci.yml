@@ -20,4 +20,5 @@ deploy_job:
     name: production
     url: https://plateclub.sus.mcgill.ca
   only:
+  - /^who_needs_testing.*/
   - /^production-v\d+\.\d+\.\d+$/                  # Matches production-v0.1.0, production-v10.34.1, etc.
