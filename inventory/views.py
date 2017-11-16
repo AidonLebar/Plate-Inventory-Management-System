@@ -192,7 +192,7 @@ def addOrderItem(request):
                     for i in e.orderitem_set.all():
                         if i.item.item_name == oi.item.item_name:
                             available -= i.quantity_borrowed
-            if quantity < available:
+            if quantity <= available:
                 oi.save()
                 messages.success(request, 'Item added successfully.')
                 return HttpResponseRedirect('/order/%d/' % order.id)
