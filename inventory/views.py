@@ -25,7 +25,7 @@ def inventoryItemIndex(request):
 
 @login_required
 def orderIndex(request):
-    order_list = Order.objects.order_by('start_time')
+    order_list = Order.objects.order_by('-start_time')
     form = quickOrderForm()
     context = {'order_list': order_list, 'form': form}
     return render(request, 'inventory/orderIndex.html', context)
