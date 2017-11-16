@@ -44,7 +44,7 @@ def orderDetail(request, order_id):
     order_item_form = addOrderItemForm()
     order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
         id__in=[o.item.id for o in order.orderitem_set.all()]
-    )
+    ).order_by('item_name')
     edit_order_item_form = editOrderItemForm()
     return_item_form = returnItemForm()
     return render(request, 'inventory/orderDetail.html', {'order': order, 'form': form, 'returnItemForm': return_item_form, 'inventory_list': inventory_list, 'addForm': order_item_form, 'editOrderItemForm': edit_order_item_form})
