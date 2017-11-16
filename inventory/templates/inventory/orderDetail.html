@@ -52,7 +52,7 @@ End Time: {{ order.end_time }} <br>
 	</tr>
   </thead>
   <tbody>
-			{% for orderitem in order.orderitem_set.all %}<br>
+			{% for orderitem in order.orderitem_set.all %}
 			<tr>
 				<td>
                     <a href="/inventoryItem/{{ orderitem.item.id }}/">{{ orderitem.item.item_name }}
