@@ -3,8 +3,8 @@ from .models import InventoryItem, Order, OrderItem
 
 
 class InventoryItemAdmin(admin.ModelAdmin):
-    fields = ['item_name', 'total_stock',]
-    list_display = ('item_name', 'total_stock', 'current_stock')
+    fields = ['item_name', 'total_stock', 'quick_order_item']
+    list_display = ('item_name', 'total_stock', 'current_stock', 'quick_order_item')
     ordering = ['item_name']
 
     def current_stock(self, obj):

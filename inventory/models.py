@@ -7,6 +7,7 @@ from django.db import models
 class InventoryItem(models.Model):
     item_name = models.CharField(max_length = 100)
     total_stock = models.PositiveIntegerField()
+    quick_order_item = models.BooleanField(default = False)
 
     def __str__(self):
         """
