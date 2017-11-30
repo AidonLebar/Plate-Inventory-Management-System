@@ -109,10 +109,11 @@ def itemAdded(request):
     if request.method == 'POST':
         form = addItemForm(request.POST)
         if form.is_valid():
+            quick_item = form.cleaned_data['quick_order_item']
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
             if name not in [item.item_name for item in InventoryItem.objects.all()]:
-                i = InventoryItem(item_name = name, total_stock = stock)
+                i = InventoryItem(item_name = name, total_stock = stock, quick_order_item = quick_item)
                 i.save()
                 messages.success(request, '%s added successfully.' % name)
                 return HttpResponseRedirect('/addItem/')
@@ -273,6 +274,7 @@ def editItem(request):
         item = get_object_or_404(InventoryItem, pk=item_id)
         form = quickOrderForm()
         edit_item_form = editItemForm()
+        edit_item_form.fields['quick_order_item'].initial = item.quick_order_item
         edit_item_form.fields['new_name'].initial = item.item_name
         edit_item_form.fields['new_total_stock'].initial = item.total_stock
         return render(request, 'inventory/editItem.html', {'item': item, 'form':form, 'editForm': edit_item_form})
@@ -295,6 +297,7 @@ def itemEdited(request):
             else:
                 item.item_name = form.cleaned_data['new_name']
                 item.total_stock = form.cleaned_data['new_total_stock']
+                item.quick_order_item = form.cleaned_data['quick_order_item']
                 item.save()
                 messages.success(request, 'Item successfully updated.')
                 return HttpResponseRedirect('/inventoryItem/%d/' % item.id)

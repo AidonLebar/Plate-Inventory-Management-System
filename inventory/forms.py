@@ -25,6 +25,7 @@ class addItemForm(forms.Form):
 
     item_name = forms.CharField(label='Item Name', max_length=100)
     stock = forms.IntegerField(validators=[MinValueValidator(1)])
+    quick_order_item = forms.BooleanField(label='Quick Order Item', required=False)
 
 class orderForm(forms.Form):
     """
@@ -59,6 +60,7 @@ class editItemForm(forms.Form):
     stock = 1 #placeholder default replaced by view
     new_name = forms.CharField(label='Item Name', max_length=100, initial = "")
     new_total_stock = forms.IntegerField(validators=[MinValueValidator(1)],label='Total Stock', initial = stock)
+    quick_order_item = forms.BooleanField(label='Quick Order Item', required=False)
 
 class editOrderForm(forms.Form):
     """
