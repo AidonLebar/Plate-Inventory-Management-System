@@ -13,11 +13,19 @@ from .forms import quickOrderForm, addItemForm, orderForm, returnItemForm, addOr
 
 @login_required
 def index(request):
+    """
+    A blank placeholder page. Unused.
+    """
+
     form = quickOrderForm()
     return render(request, 'inventory/index.html', {'form': form})
 
 @login_required
 def inventoryItemIndex(request):
+    """
+    A table of all items in inventory, their total stock and current stock.
+    """
+
     inventory_item_list = InventoryItem.objects.order_by('item_name')
     form = quickOrderForm()
     context = {'inventory_item_list': inventory_item_list, 'form': form}
@@ -25,6 +33,10 @@ def inventoryItemIndex(request):
 
 @login_required
 def orderIndex(request):
+    """
+    A table of all orders, their start time and end time. Split into regular orders and quick orders.
+    """
+
     order_list = Order.objects.order_by('-start_time')
     form = quickOrderForm()
     context = {'order_list': order_list, 'form': form}
@@ -32,16 +44,24 @@ def orderIndex(request):
 
 @login_required
 def inventoryDetail(request, inventory_item_id):
+    """
+    Detail page for an item. Includes name, current stock, average order size, and orders that have ordered it.
+    """
+
     form = quickOrderForm()
     inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
     return render(request, 'inventory/inventoryDetail.html', {'inventoryItem': inventoryItem, 'form': form})
 
 @login_required
 def orderDetail(request, order_id):
+    """
+    Detail page of orders, including order information and items ordered in it.
+    """
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
     inventory_list = InventoryItem.objects.order_by('item_name')
     order_item_form = addOrderItemForm()
+    #mutates order list in specific order detail to only allow the addition of items that are not already in order.
     order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
         id__in=[o.item.id for o in order.orderitem_set.all()]
     ).order_by('item_name')
@@ -51,6 +71,9 @@ def orderDetail(request, order_id):
 
 @login_required
 def quickOrder(request):
+    """
+    Quick order side bar.
+    """
     if request.method == 'POST':
         form = quickOrderForm(request.POST)
         if form.is_valid():
@@ -69,12 +92,20 @@ def quickOrder(request):
 
 @login_required
 def addItem(request):
+    """
+    Input page for new information to make a new item.
+    """
+
     form = quickOrderForm()
     additemform = addItemForm()
     return render(request, 'inventory/addItem.html', {'form':form, 'additemform': additemform})
 
 @login_required
 def itemAdded(request):
+    """
+    View to process the new item form and add the item.
+    """
+
     if request.method == 'POST':
         form = addItemForm(request.POST)
         if form.is_valid():
@@ -94,12 +125,20 @@ def itemAdded(request):
 
 @login_required
 def placeOrder(request):
+    """
+    Page to input information for a new order.
+    """
+
     form = quickOrderForm()
     orderform = orderForm()
     return render(request, 'inventory/placeOrder.html', {'form':form, 'placeorderform': orderform})
 
 @login_required
 def deleteItem(request):
+    """
+    Processes item deletion.
+    """
+
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
         item_name = request.POST['item_name']
@@ -114,6 +153,9 @@ def deleteItem(request):
 
 @login_required
 def deleteOrder(request):
+    """
+    Processes order deletion.
+    """
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
@@ -124,6 +166,10 @@ def deleteOrder(request):
 
 @login_required
 def orderPlaced(request):
+    """
+    Processes order placement form and adds it to database.
+    """
+
     if request.method == 'POST':
         form = orderForm(request.POST)
         if form.is_valid():
@@ -144,6 +190,10 @@ def orderPlaced(request):
 
 @login_required
 def returnItem(request):
+    """
+    Processes return for a single order item.
+    """
+
     if request.method == 'POST':
         form = returnItemForm(request.POST)
         if form.is_valid():
@@ -152,7 +202,7 @@ def returnItem(request):
             returned = form.cleaned_data['returned']
             order_id = request.POST['order_id']
             order = get_object_or_404(Order, pk=order_id)
-            if returned > orderItem.quantity_borrowed:
+            if returned > orderItem.quantity_borrowed: #cannot return nore than was borrowed
                 messages.error(request, 'Cannot return more than was borrowed')
                 return HttpResponseRedirect('/order/%d/' % order.id)
             else:
@@ -167,6 +217,10 @@ def returnItem(request):
 
 @login_required
 def returnAll(request):
+    """
+    Processes full order return.
+    """
+
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
@@ -178,6 +232,10 @@ def returnAll(request):
 
 @login_required
 def addOrderItem(request):
+    """
+    Processes new item form and adds item to order.
+    """
+
     if request.method == 'POST':
         form = addOrderItemForm(request.POST)
         if form.is_valid():
@@ -187,6 +245,7 @@ def addOrderItem(request):
             quantity = form.cleaned_data['quantity_to_borrow']
             available = item.total_stock
             oi = OrderItem(item = item, order = order, quantity_borrowed = quantity)
+            #checks items in orders that overlap in time to ensure that desired amount is available
             for e in Order.objects.all():
                 if not(((e.start_time > oi.order.end_time))or((e.end_time < oi.order.start_time))):
                     for i in e.orderitem_set.all():
@@ -205,17 +264,25 @@ def addOrderItem(request):
 
 @login_required
 def editItem(request):
-  if request.method == 'GET':
-    item_id=request.GET['item_id']
-    item = get_object_or_404(InventoryItem, pk=item_id)
-    form = quickOrderForm()
-    edit_item_form = editItemForm()
-    edit_item_form.fields['new_name'].initial = item.item_name
-    edit_item_form.fields['new_total_stock'].initial = item.total_stock
-    return render(request, 'inventory/editItem.html', {'item': item, 'form':form, 'editForm': edit_item_form})
+    """
+    Page for editing an item.
+    """
+
+    if request.method == 'GET':
+        item_id=request.GET['item_id']
+        item = get_object_or_404(InventoryItem, pk=item_id)
+        form = quickOrderForm()
+        edit_item_form = editItemForm()
+        edit_item_form.fields['new_name'].initial = item.item_name
+        edit_item_form.fields['new_total_stock'].initial = item.total_stock
+        return render(request, 'inventory/editItem.html', {'item': item, 'form':form, 'editForm': edit_item_form})
 
 @login_required
 def itemEdited(request):
+    """
+    Processes edit form and edits item in database.
+    """
+
     if request.method == 'POST':
         form = editItemForm(request.POST)
         if form.is_valid():
@@ -237,6 +304,10 @@ def itemEdited(request):
 
 @login_required
 def editOrder(request):
+    """
+    Page for editing and order.
+    """
+
     if request.method == 'GET':
         order_id=request.GET['order_id']
         order = get_object_or_404(Order, pk=order_id)
@@ -249,6 +320,10 @@ def editOrder(request):
 
 @login_required
 def orderEdited(request):
+    """
+    Processes a order edit form and edits the order.
+    """
+
     if request.method == 'POST':
         form = editOrderForm(request.POST)
         if form.is_valid():
@@ -266,6 +341,10 @@ def orderEdited(request):
 
 @login_required
 def editOrderItem(request):
+    """
+    Processes the editing of an order item.
+    """
+
     if request.method == 'POST':
         form = editOrderItemForm(request.POST)
         if form.is_valid():
@@ -284,6 +363,10 @@ def editOrderItem(request):
 
 @login_required
 def deleteOrderItem(request):
+    """
+    Processes deletion of order items from an order.
+    """
+
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
