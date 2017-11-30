@@ -57,6 +57,7 @@ def orderDetail(request, order_id):
     """
     Detail page of orders, including order information and items ordered in it.
     """
+
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
     inventory_list = InventoryItem.objects.order_by('item_name')
@@ -74,6 +75,7 @@ def quickOrder(request):
     """
     Quick order side bar.
     """
+
     if request.method == 'POST':
         form = quickOrderForm(request.POST)
         if form.is_valid():
@@ -157,6 +159,7 @@ def deleteOrder(request):
     """
     Processes order deletion.
     """
+    
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
