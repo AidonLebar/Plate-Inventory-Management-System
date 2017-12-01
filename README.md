@@ -1,4 +1,4 @@
-# Plate Club Inventory
+# Plate Inventory Management System
 An system for McGill's Plate Club to manage their inventory.
 ## Developing
 ### Setting Up the Environment
