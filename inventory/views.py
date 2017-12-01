@@ -73,7 +73,7 @@ def orderDetail(request, order_id):
 @login_required
 def quickOrder(request):
     """
-    Quick order side bar.
+    Quick order side bar parsing and pacing of order.
     """
 
     if request.method == 'POST':
@@ -83,7 +83,7 @@ def quickOrder(request):
             o = Order(borrower_name = form.cleaned_data['name'], start_time = timezone.now(), end_time = (timezone.now() + datetime.timedelta(hours = 1)), quick_order = True)
             o.save()
             for i in choices:
-                o.orderitem_set.create(item = InventoryItem.objects.filter(item_name = i).first(), quantity_borrowed = 1)
+                o.orderitem_set.create(item = i, quantity_borrowed = 1)
             messages.success(request, 'Quick order successful.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         else:
@@ -159,7 +159,7 @@ def deleteOrder(request):
     """
     Processes order deletion.
     """
-    
+
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
