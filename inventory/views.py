@@ -37,6 +37,7 @@ def orderIndex(request):
     A table of all orders, their start time and end time. Split into regular orders and quick orders.
     """
 
+    #sorted chronologically with newest orders first
     order_list = Order.objects.order_by('-start_time')
     form = quickOrderForm()
     context = {'order_list': order_list, 'form': form}
@@ -57,11 +58,12 @@ def orderDetail(request, order_id):
     """
     Detail page of orders, including order information and items ordered in it.
     """
+
     form = quickOrderForm()
     order = get_object_or_404(Order, pk=order_id)
     inventory_list = InventoryItem.objects.order_by('item_name')
     order_item_form = addOrderItemForm()
-    #mutates order list in specific order detail to only allow the addition of items that are not already in order.
+    #mutates order list in order detail to only allow the addition of items that are not already in order.
     order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
         id__in=[o.item.id for o in order.orderitem_set.all()]
     ).order_by('item_name')
@@ -72,8 +74,9 @@ def orderDetail(request, order_id):
 @login_required
 def quickOrder(request):
     """
-    Quick order side bar.
+    Quick order side bar parsing and pacing of order.
     """
+
     if request.method == 'POST':
         form = quickOrderForm(request.POST)
         if form.is_valid():
@@ -81,7 +84,7 @@ def quickOrder(request):
             o = Order(borrower_name = form.cleaned_data['name'], start_time = timezone.now(), end_time = (timezone.now() + datetime.timedelta(hours = 1)), quick_order = True)
             o.save()
             for i in choices:
-                o.orderitem_set.create(item = InventoryItem.objects.filter(item_name = i).first(), quantity_borrowed = 1)
+                o.orderitem_set.create(item = i, quantity_borrowed = 1)
             messages.success(request, 'Quick order successful.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
         else:
@@ -112,7 +115,7 @@ def itemAdded(request):
             quick_item = form.cleaned_data['quick_order_item']
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
-            if name not in [item.item_name for item in InventoryItem.objects.all()]:
+            if name not in [item.item_name for item in InventoryItem.objects.all()]: #ensures a unique name for each item
                 i = InventoryItem(item_name = name, total_stock = stock, quick_order_item = quick_item)
                 i.save()
                 messages.success(request, '%s added successfully.' % name)
@@ -143,12 +146,9 @@ def deleteItem(request):
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
         item_name = request.POST['item_name']
-        if item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon':
-            messages.warning(request, "%s is a default item and cannot be deleted." % item_name)
-        else:
-            inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
-            inventoryItem.delete()
-            messages.success(request, '%s was successfully deleted.' % item_name)
+        inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
+        inventoryItem.delete()
+        messages.success(request, '%s was successfully deleted.' % item_name)
 
     return HttpResponseRedirect('/inventory/')
 
@@ -157,6 +157,7 @@ def deleteOrder(request):
     """
     Processes order deletion.
     """
+
     if request.method == 'POST':
         order_id=request.POST['order_id']
         order = get_object_or_404(Order, pk=order_id)
@@ -177,7 +178,7 @@ def orderPlaced(request):
             borrower = form.cleaned_data['borrower_name']
             start = form.cleaned_data['start_time']
             end = form.cleaned_data['end_time']
-            if end > start:
+            if end > start: #ensures that start date is before end date
                 o = Order(borrower_name = borrower, start_time = start, end_time = end)
                 o.save()
                 messages.success(request, 'Order successfully created.')
@@ -186,7 +187,7 @@ def orderPlaced(request):
                 messages.error(request, 'Start date must be before end date.')
                 return HttpResponseRedirect('/placeOrder/')
         else:
-            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
+            messages.error(request, 'Date must be a valid date in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect('/placeOrder/')
 
 @login_required
@@ -291,16 +292,12 @@ def itemEdited(request):
             item_id=request.POST['item_id']
             item = get_object_or_404(InventoryItem, pk=item_id)
             item_name = item.item_name
-            if (item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon') and item_name != form.cleaned_data['new_name']:
-                messages.warning(request, "%s is a default item and the name cannot be edited." % item_name)
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-            else:
-                item.item_name = form.cleaned_data['new_name']
-                item.total_stock = form.cleaned_data['new_total_stock']
-                item.quick_order_item = form.cleaned_data['quick_order_item']
-                item.save()
-                messages.success(request, 'Item successfully updated.')
-                return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
+            item.item_name = form.cleaned_data['new_name']
+            item.total_stock = form.cleaned_data['new_total_stock']
+            item.quick_order_item = form.cleaned_data['quick_order_item']
+            item.save()
+            messages.success(request, 'Item successfully updated.')
+            return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
         else:
             messages.error(request, 'Total Stock must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
@@ -339,7 +336,7 @@ def orderEdited(request):
             messages.success(request, 'Order successfully updated.')
             return HttpResponseRedirect('/order/%d/' % order.id)
         else:
-            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
+            messages.error(request, 'Date must be a valid date in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required

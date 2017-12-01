@@ -8,15 +8,8 @@ class quickOrderForm(forms.Form):
     Form for quick add sidebar.
     """
 
-    QUICK_ORDER_CHOICES =(
-                    ('Plate', 'Plate'),
-                    ('Bowl', 'Bowl'),
-                    ('Spoon', 'Spoon'),
-                    ('Fork', 'Fork'),
-                    )
-
     name = forms.CharField(label=False, max_length=100)
-    items = forms.MultipleChoiceField(label=False, widget=forms.CheckboxSelectMultiple(attrs={'class':'quick_order_form_checkboxes'}), choices=QUICK_ORDER_CHOICES)
+    items = forms.ModelMultipleChoiceField(required=True, widget=forms.CheckboxSelectMultiple(), queryset=InventoryItem.objects.filter(quick_order_item=True))
 
 class addItemForm(forms.Form):
     """
