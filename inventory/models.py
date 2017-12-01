@@ -17,13 +17,13 @@ class InventoryItem(models.Model):
 
     def currentStock(self):
         """
-        Calculates current stock as total stock minus what is currently out in active orders, returns an integer.
+        Calculates current stock as total stock minus what is currently out in active orders and what has not been returned. Returns an integer.
         """
         stock = self.total_stock
         for  i in self.orderitem_set.all():
-            if i.activeOrderItem():
+            if i.activeOrderItem(): #amount currently out
                 stock = stock - i.quantity_borrowed + i.quantity_returned
-            elif i.order.end_time < timezone.now():
+            elif i.order.end_time < timezone.now(): #amount past due and ureturned
                 stock = stock - i.quantity_borrowed + i.quantity_returned
         return stock
 
@@ -45,7 +45,7 @@ class InventoryItem(models.Model):
                 average = average + i.quantity_borrowed
                 total_non_quick_orders += 1
 
-        if total_non_quick_orders > 0:
+        if total_non_quick_orders > 0: #if no full orders have been placed, to avoid division by zero.
             average = average/total_non_quick_orders
         else:
             average = 0
@@ -76,7 +76,7 @@ class Order(models.Model):
 
     def clean(self):
         """
-        Ensures datetme fields are filled and that the end time is not before the start time.
+        Ensures datetime fields are filled and that the end time is not before the start time.
         Returns nothing, but will raise exceptions.
         """
         if self.start_time is None:
