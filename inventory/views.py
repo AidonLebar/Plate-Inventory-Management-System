@@ -145,12 +145,9 @@ def deleteItem(request):
     if request.method == 'POST':
         inventory_item_id = request.POST['item_id']
         item_name = request.POST['item_name']
-        if item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon':
-            messages.warning(request, "%s is a default item and cannot be deleted." % item_name)
-        else:
-            inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
-            inventoryItem.delete()
-            messages.success(request, '%s was successfully deleted.' % item_name)
+        inventoryItem = get_object_or_404(InventoryItem, pk=inventory_item_id)
+        inventoryItem.delete()
+        messages.success(request, '%s was successfully deleted.' % item_name)
 
     return HttpResponseRedirect('/inventory/')
 
@@ -294,16 +291,12 @@ def itemEdited(request):
             item_id=request.POST['item_id']
             item = get_object_or_404(InventoryItem, pk=item_id)
             item_name = item.item_name
-            if (item_name == 'Bowl' or item_name == 'Plate' or item_name == 'Fork' or item_name == 'Spoon') and item_name != form.cleaned_data['new_name']:
-                messages.warning(request, "%s is a default item and the name cannot be edited." % item_name)
-                return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
-            else:
-                item.item_name = form.cleaned_data['new_name']
-                item.total_stock = form.cleaned_data['new_total_stock']
-                item.quick_order_item = form.cleaned_data['quick_order_item']
-                item.save()
-                messages.success(request, 'Item successfully updated.')
-                return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
+            item.item_name = form.cleaned_data['new_name']
+            item.total_stock = form.cleaned_data['new_total_stock']
+            item.quick_order_item = form.cleaned_data['quick_order_item']
+            item.save()
+            messages.success(request, 'Item successfully updated.')
+            return HttpResponseRedirect('/inventoryItem/%d/' % item.id)
         else:
             messages.error(request, 'Total Stock must be greater than 0.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
