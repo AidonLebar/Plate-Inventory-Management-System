@@ -37,6 +37,7 @@ def orderIndex(request):
     A table of all orders, their start time and end time. Split into regular orders and quick orders.
     """
 
+    #sorted chronologically with newest orders first
     order_list = Order.objects.order_by('-start_time')
     form = quickOrderForm()
     context = {'order_list': order_list, 'form': form}
@@ -62,7 +63,7 @@ def orderDetail(request, order_id):
     order = get_object_or_404(Order, pk=order_id)
     inventory_list = InventoryItem.objects.order_by('item_name')
     order_item_form = addOrderItemForm()
-    #mutates order list in specific order detail to only allow the addition of items that are not already in order.
+    #mutates order list in order detail to only allow the addition of items that are not already in order.
     order_item_form.fields['item_to_add'].queryset = InventoryItem.objects.exclude(
         id__in=[o.item.id for o in order.orderitem_set.all()]
     ).order_by('item_name')
@@ -114,7 +115,7 @@ def itemAdded(request):
             quick_item = form.cleaned_data['quick_order_item']
             name = form.cleaned_data['item_name']
             stock = form.cleaned_data['stock']
-            if name not in [item.item_name for item in InventoryItem.objects.all()]:
+            if name not in [item.item_name for item in InventoryItem.objects.all()]: #ensures a unique name for each item
                 i = InventoryItem(item_name = name, total_stock = stock, quick_order_item = quick_item)
                 i.save()
                 messages.success(request, '%s added successfully.' % name)
@@ -177,7 +178,7 @@ def orderPlaced(request):
             borrower = form.cleaned_data['borrower_name']
             start = form.cleaned_data['start_time']
             end = form.cleaned_data['end_time']
-            if end > start:
+            if end > start: #ensures that start date is before end date
                 o = Order(borrower_name = borrower, start_time = start, end_time = end)
                 o.save()
                 messages.success(request, 'Order successfully created.')
@@ -186,7 +187,7 @@ def orderPlaced(request):
                 messages.error(request, 'Start date must be before end date.')
                 return HttpResponseRedirect('/placeOrder/')
         else:
-            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
+            messages.error(request, 'Date must be a valid date in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect('/placeOrder/')
 
 @login_required
@@ -335,7 +336,7 @@ def orderEdited(request):
             messages.success(request, 'Order successfully updated.')
             return HttpResponseRedirect('/order/%d/' % order.id)
         else:
-            messages.error(request, 'Date must be in format YYYY-MM-DD HH:MM:SS.')
+            messages.error(request, 'Date must be a valid date in format YYYY-MM-DD HH:MM:SS.')
             return HttpResponseRedirect(request.META.get('HTTP_REFERER', '/'))
 
 @login_required
