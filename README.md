@@ -5,7 +5,7 @@ An system for McGill's Plate Club to manage their inventory.
 
 1. Clone the repository:
 ```bash
-git clone https://gitlab.science.mcgill.ca/ctf-general/plate-club-inventory.git
+git clone https://github.com/AidonLebar/Plate-Inventory-Management-System.git
 ```
 
 2. Install virtualenv (if you haven't already):
