@@ -1,5 +1,5 @@
 # Plate Inventory Management System (PIMS)
-An system for McGill's Plate Club to manage their inventory.
+A web app for McGill's Plate Club to manage their inventory.
 ## Developing
 ### Setting Up the Environment
 
